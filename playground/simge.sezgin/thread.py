@@ -14,7 +14,7 @@ class Worker(QThread):
         QThread.__init__(self)
     def run(self): #thread ayrı süreç içinde yapmasını istediğimiz şey.
         while True:
-            widget.show()
+            print "+"
             sleep(10.0)
 
 a=QtGui.QApplication(sys.argv)
@@ -25,5 +25,5 @@ w.start() #bu fonksiyon, qthread'ın run fonksiyonunu ayrı bir süreç içinde 
 #ve kodumuz devam eder
  
 while True:
-    widget.hide()
+    print "*"
     sleep(10.4)

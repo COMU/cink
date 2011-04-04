@@ -9,8 +9,9 @@ from PyQt4.QtGui import QShortcut
 import QTermWidget
 from PyQt4.QtCore import QThread
 def close():
-    w.sleep()
-    
+    QThread.sleep(10)
+    w.hide()    
+
 
 
 a = QtGui.QApplication(sys.argv)
@@ -19,8 +20,11 @@ w.resize(500,500)
 
 shortcut=QShortcut("c",w,close)
 
+w.setColorScheme(3)
 w.show()
 sys.exit(a.exec_())
     
+
+
 
 
