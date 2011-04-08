@@ -21,6 +21,14 @@ def eskiekran():
     w.showNormal()
 def kapama():
     w.close()
+def ekran():
+    while(True):
+        kisayol7=QShortcut("SHIFT+t",w,tamekran)
+        i=1
+        if(i==1):
+            kisayol8=QShortcut("SHIFT+t",w,eskiekran)
+            break
+
 
 w.resize(600,400)
 w.setColorScheme(2)
@@ -29,22 +37,11 @@ kisayol1=QShortcut("Alt+g",w,gri)
 kisayol2=QShortcut("ALT+y",w,yesil)
 kisayol3=QShortcut("ALT+s",w,sari) 
 kapat=QShortcut("ALT+c",w,kapama)
-kisayol4=QShortcut("SHIFT+a",w,tamekran)
-         
+kisayol4=QShortcut("SHIFT+a",w,ekran)
+# kisayol7=QShortcut("SHIFT+t",w,tamekran)
 w.setColorScheme(2) 
 
-def eventFilter(self, obj, event):
-    if event.type() == QEvent.KeyPress: 
-        key = event.key()
-        if key == c:
-            if self.isFullScreen():
-                self.resize(600,400)
-            else:
-                self.showFullScreen()
-            return True
-    return QWidget.eventFilter(self, obj,event)
 
-    
 w.show()
 a.exec_()
 
