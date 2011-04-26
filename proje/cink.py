@@ -30,7 +30,7 @@ def ekran():
 'konsolun boyutlarının değiştirilmesi'
 
 en=w.width()
-artim=15
+artim=200
 boy=w.height()
 
 def en_artir():
@@ -55,7 +55,7 @@ def en_azalt():
     en=w.width()
     boy=w.height()
     while(True):
-        if(en==10):
+        if(en<artim):
             w.resize(en,boy)
             break
         else:
@@ -67,7 +67,7 @@ def boy_azalt():
     en=w.width()
     boy=w.height()
     while(True):
-        if(boy==10):
+        if(boy<artim):
             w.resize(en,boy)
             break
         else:
