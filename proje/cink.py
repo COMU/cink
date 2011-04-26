@@ -55,22 +55,30 @@ def en_azalt():
     en=w.width()
     boy=w.height()
     while(True):
-        en=en-artim
-        w.resize(en,boy)
-        break
+        if(en==10):
+            w.resize(en,boy)
+            break
+        else:
+            en=en-artim
+            w.resize(en,boy)
+            break
 
 def boy_azalt():
     en=w.width()
     boy=w.height()
     while(True):
-        boy=boy-artim
-        w.resize(en,boy)
-        break
+        if(boy==10):
+            w.resize(en,boy)
+            break
+        else:
+            boy=boy-artim
+            w.resize(en,boy)
+            break
 
 kisayol=QShortcut("ALT+k",w,en_artir)
-kisayol2=QShortcut("ALT+m",w,boy_artir)
-kisayol3=QShortcut("ALT+j",w,en_azalt)
-kisayol4=QShortcut("ALT+n",w,boy_azalt)
+kisayol5=QShortcut("ALT+m",w,boy_artir)
+kisayol7=QShortcut("ALT+j",w,en_azalt)
+kisayol8=QShortcut("ALT+n",w,boy_azalt)
 def kapama():
     w.close()
 
