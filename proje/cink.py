@@ -27,9 +27,53 @@ def ekran():
         w.showFullScreen()
     else:
         w.showNormal()
+'konsolun boyutlarının değiştirilmesi'
 
+en=w.width()
+artim=15
+boy=w.height()
+
+def en_artir():
+    en=w.width()
+    boy=w.height()
+    max_x=w.maximumWidth()
+    max_y=w.maximumHeight()
+    while(True):
+        en=en+artim
+        w.resize(en,boy)
+        break
+
+def boy_artir():
+    en=w.width()
+    boy=w.height()
+    while(True):
+        boy=boy+artim
+        w.resize(en,boy)
+        break
+
+def en_azalt():
+    en=w.width()
+    boy=w.height()
+    while(True):
+        en=en-artim
+        w.resize(en,boy)
+        break
+
+def boy_azalt():
+    en=w.width()
+    boy=w.height()
+    while(True):
+        boy=boy-artim
+        w.resize(en,boy)
+        break
+
+kisayol=QShortcut("ALT+k",w,en_artir)
+kisayol2=QShortcut("ALT+m",w,boy_artir)
+kisayol3=QShortcut("ALT+j",w,en_azalt)
+kisayol4=QShortcut("ALT+n",w,boy_azalt)
 def kapama():
     w.close()
+
 w.setColorScheme(2)
 
 kisayol1=QShortcut("Alt+g",w,gri)
