@@ -39,7 +39,7 @@ class Center(QTermWidget):
         size =  self.geometry()
         cntr=(screen.width()-size.width())/2
   #      self.move((screen.width()-size.width())/2, 0)
-        self.setGeometry(cntr,25,size.width(),size.height())
+        self.setGeometry(cntr,0,size.width(),size.height())
 
 def artir():
     mesafe=QtGui.QDesktopWidget().screenGeometry().width()-w.width()
@@ -125,8 +125,9 @@ if __name__=='__main__':
     a=Qt.QApplication(sys.argv)
     w = Center()
     w.setScrollBarPosition(2)
-    w.show()
+    w.setWindowFlags(QtCore.Qt.FramelessWindowHint)
     w.setColorScheme(2)
+    w.show()
     kisayol6=QShortcut("Ctrl+F11",w,ekran)
     art=QShortcut("ALT+k",w,artir)
     azalt=QShortcut("ALT+m",w,azalt)
