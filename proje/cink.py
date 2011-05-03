@@ -118,6 +118,12 @@ def boy_azalt():
         else:
             break
 
+def transparent_artma():
+    w.setWindowOpacity(0.6)
+
+def transparent_azl():
+    w.setWindowOpacity(1.0)
+
 def kapama():
     w.close()
 
@@ -137,6 +143,8 @@ if __name__=='__main__':
     kisayol1=QShortcut("Alt+g",w,gri)
     kisayol2=QShortcut("ALT+y",w,yesil)
     kisayol3=QShortcut("ALT+s",w,sari)
+    transparent_art=QShortcut("Ctrl+q",w,transparent_artma)
+    transparent_azl=QShortcut("Ctrl+w",w,transparent_azl)
     a.exec_()
 
 
