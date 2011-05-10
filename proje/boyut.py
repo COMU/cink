@@ -5,37 +5,22 @@ import sys
 from PyQt4 import Qt
 from PyQt4.QtGui import QShortcut
 import QTermWidget
+from QTermWidget import QTermWidget
+from cink import Center
 
-a=Qt.QApplication(sys.argv)
-w=QTermWidget.QTermWidget()
+class deneme(QTermWidget,Center):
+    def __init__(self,parent=None):
+        QTermWidget.__init__(self)
+        self.center(self)
+        
 
-def sari():
-    w.setColorScheme(3)
-def gri():
-    w.setColorScheme(1)
-def yesil():
-    w.setColorScheme(2)
-def ekran():
-    if(w.isFullScreen()==False):
-        w.showFullScreen()
-    else:
-        w.showNormal()
+def main():
 
-def kapama():
-    w.close()
+    a=Qt.QApplication(sys.argv)
+    w=QTermWidget.QTermWidget()
+    w.show()
 
-w.resize(600,400)
-w.setColorScheme(2)
-w.setScrollBarPosition(2)
-kisayol1=QShortcut("Alt+g",w,gri)
-kisayol2=QShortcut("ALT+y",w,yesil)
-kisayol3=QShortcut("ALT+s",w,sari) 
-kapat=QShortcut("ALT+c",w,kapama)
-kisayol7=QShortcut("SHIFT+t",w,ekran)
-w.setColorScheme(2) 
+    return a.exec_()
 
-
-w.show()
-a.exec_()
-
-
+if __name__=="__main__":
+    main()

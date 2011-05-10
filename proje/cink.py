@@ -19,20 +19,25 @@ def yesil():
 #def tam_ekranlScreen()
 #def normal_ekran():
   #  w.showNormal()
-'aynı tuşu kullanarak konsolu büyütüp küçültme'
-def ekran():
+#aynı tuşu kullanarak konsolu büyütüp küçültme
+"""def ekran():
     if(w.isFullScreen()==False):
         w.showFullScreen()
     else:
-        w.showNormal()
-'konsolun boyutlarının değiştirilmesi'
+        w.showNormal()"""
+#konsolun boyutlarının değiştirilmesi
 
 
-class Center(QTermWidget):
+class Cink(QTermWidget):
     def __init__(self,parent=None):
         QTermWidget.__init__(self)
         self.center()
-
+    
+    def ekran(self):
+        if(w.isFullScreen()==False):
+            w.showFullScreen()
+        else:
+            w.showNormal()    
 
     def center(self):
         screen = QtGui.QDesktopWidget().screenGeometry()
@@ -41,110 +46,110 @@ class Center(QTermWidget):
   #      self.move((screen.width()-size.width())/2, 0)
         self.setGeometry(cntr,0,size.width(),size.height())
 
-def artir():
-    mesafe=QtGui.QDesktopWidget().screenGeometry().width()-w.width()
-    while(True):
-        screen = QtGui.QDesktopWidget().screenGeometry()
-        en=w.width()
-        boy=w.height()
-        uzaklik=screen.width()- w.width()
-        if(uzaklik>0):
-            uzaklik=uzaklik-200
-            if(uzaklik>200):
+    def artir(self):
+        mesafe=QtGui.QDesktopWidget().screenGeometry().width()-w.width()
+        while(True):
+            screen = QtGui.QDesktopWidget().screenGeometry()
+            en=w.width()
+            boy=w.height()
+            uzaklik=screen.width()- w.width()
+            if(uzaklik>0):
+                uzaklik=uzaklik-200
+                if(uzaklik>200):
+                    yeniuzaklik=screen.width()-uzaklik
+                    w.resize(yeniuzaklik,boy)
+                    w.center()
+                    break
+                else:
+                    yeniuzaklik=screen.width()
+                    w.resize(yeniuzaklik,boy)
+                    w.center()
+                    break
+                break
+            else:
+                break
+
+    def azalt(self):
+        while(True):
+            screen = QtGui.QDesktopWidget().screenGeometry()
+            en=w.width()
+            boy=w.height()
+            uzaklik=screen.width()-w.width()
+            if(uzaklik==0):
+                uzaklik=uzaklik+200
                 yeniuzaklik=screen.width()-uzaklik
                 w.resize(yeniuzaklik,boy)
                 w.center()
                 break
             else:
-                yeniuzaklik=screen.width()
-                w.resize(yeniuzaklik,boy)
-                w.center()
-                break
-            break
-        else:
+                uzaklik=uzaklik+200
+                yeniuzaklik=screen.width()-uzaklik
+                if(yeniuzaklik>100):
+                    w.resize(yeniuzaklik,boy)
+                    w.center()
+                    break
+                else:
+                    break
             break
 
-def azalt():
-    while(True):
-        screen = QtGui.QDesktopWidget().screenGeometry()
+    def boy_artir(self):
         en=w.width()
         boy=w.height()
-        uzaklik=screen.width()-w.width()
-        if(uzaklik==0):
-            uzaklik=uzaklik+200
-            yeniuzaklik=screen.width()-uzaklik
-            w.resize(yeniuzaklik,boy)
-            w.center()
-            break
-        else:
-            uzaklik=uzaklik+200
-            yeniuzaklik=screen.width()-uzaklik
-            if(yeniuzaklik>100):
-                w.resize(yeniuzaklik,boy)
-                w.center()
-                break
-            else:
-                break
-        break
-
-def boy_artir():
-    en=w.width()
-    boy=w.height()
-    while(True):
-        screen = QtGui.QDesktopWidget().screenGeometry()
-        if(boy<screen.height()):
-            boy=boy+200
+        while(True):
+            screen = QtGui.QDesktopWidget().screenGeometry()
             if(boy<screen.height()):
-                w.resize(en,boy-25)
-                w.center()
-                break
+                boy=boy+200
+                if(boy<screen.height()):
+                    w.resize(en,boy-25)
+                    w.center()
+                    break
+                else:
+                    w.resize(en,screen.height()-25)
+                    break
+
+
+    def boy_azalt(self):
+        while(True):
+            screen = QtGui.QDesktopWidget().screenGeometry()
+            en=w.width()
+            boy=w.height()
+            if(boy<(screen.height())):
+                boy=boy-200
+                if(boy>100):
+                    w.resize(en,boy)
+                    break
+                else:
+                    break
             else:
-                w.resize(en,screen.height()-25)
                 break
 
+    def transparent_artma(self):
+        w.setWindowOpacity(0.6)
 
-def boy_azalt():
-    while(True):
-        screen = QtGui.QDesktopWidget().screenGeometry()
-        en=w.width()
-        boy=w.height()
-        if(boy<(screen.height())):
-            boy=boy-200
-            if(boy>100):
-                w.resize(en,boy)
-                break
-            else:
-                break
-        else:
-            break
+    def transparent_azl(self):
+        w.setWindowOpacity(1.0)
 
-def transparent_artma():
-    w.setWindowOpacity(0.6)
-
-def transparent_azl():
-    w.setWindowOpacity(1.0)
-
-def kapama():
-    w.close()
+    def kapama(self):
+        w.close()
 
 if __name__=='__main__':
     a=Qt.QApplication(sys.argv)
-    w = Center()
+    w = Cink()
     w.setScrollBarPosition(2)
     w.setWindowFlags(QtCore.Qt.FramelessWindowHint)
     w.setColorScheme(2)
     w.show()
-    kisayol6=QShortcut("Ctrl+F11",w,ekran)
-    art=QShortcut("ALT+k",w,artir)
-    azalt=QShortcut("ALT+m",w,azalt)
-    boy_art=QShortcut("ALT+j",w,boy_artir)
-    boy_azalt=QShortcut("ALT+n",w,boy_azalt)
-    kapat=QShortcut("ALT+c",w,kapama)
+    kisayol6=QShortcut("Ctrl+F11",w,w.ekran)
+    art=QShortcut("ALT+k",w,w.artir)
+    azalt=QShortcut("ALT+m",w,w.azalt)
+    boy_art=QShortcut("ALT+j",w,w.boy_artir)
+    boy_azalt=QShortcut("ALT+n",w,w.boy_azalt)
+    kapat=QShortcut("ALT+c",w,w.kapama)
     kisayol1=QShortcut("Alt+g",w,gri)
     kisayol2=QShortcut("ALT+y",w,yesil)
     kisayol3=QShortcut("ALT+s",w,sari)
-    transparent_art=QShortcut("Ctrl+q",w,transparent_artma)
-    transparent_azl=QShortcut("Ctrl+w",w,transparent_azl)
+    transparent_art=QShortcut("Ctrl+q",w,w.transparent_artma)
+    transparent_azl=QShortcut("Ctrl+w",w,w.transparent_azl)
     a.exec_()
 
 
