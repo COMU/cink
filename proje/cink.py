@@ -4,8 +4,11 @@
 import sys
 from PyQt4 import QtGui,QtCore
 from PyQt4 import Qt
+import QTermWidget
+from  PyQt4.Qt import QSplitter
+from  PyQt4.Qt import QMainWindow
 from PyQt4.QtGui import QShortcut
-from QTermWidget import QTermWidget
+#from QTermWidget import QTermWidget
 
 
 def sari():
@@ -14,36 +17,51 @@ def gri():
     w.setColorScheme(1)
 def yesil():
     w.setColorScheme(2)
-#def tamekran():
-  #  w.resize(2048,2048)
-#def tam_ekranlScreen()
-#def normal_ekran():
-  #  w.showNormal()
-#aynı tuşu kullanarak konsolu büyütüp küçültme
-"""def ekran():
-    if(w.isFullScreen()==False):
-        w.showFullScreen()
-    else:
-        w.showNormal()"""
-#konsolun boyutlarının değiştirilmesi
 
+#w.setColorScheme(SARI)
 
-class Cink(QTermWidget):
-    def __init__(self,parent=None):
-        QTermWidget.__init__(self)
+class Cink(Qt.QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.resize(640,320)
+        self.setCentralWidget(self.createWidget())
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.center()
-    
+
+    def createWidget(self):
+        widget=QTermWidget.QTermWidget()
+        widget.setColorScheme(2)
+        widget.setScrollBarPosition(2)
+        widget.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        return widget
+
+    def setVertical(self):
+        splitter = Qt.QSplitter(self)
+        splitter.setAutoFillBackground(True)
+        newWidget=createWidget()
+        splitter.setOrientation(Qt.Qt.Vertical)
+        splitter.addWidget(newWidget)
+        newWidget.setAutoFillBackground(True)
+
+    def setHorizontal(self):
+        splitter = Qt.QSplitter(self)
+        splitter.setAutoFillBackground(True)
+        newWidget=createWidget()
+        splitter.setOrientation(Qt.Qt.Horizontal)
+        splitter.addWidget(newWidget)
+        newWidget.setAutoFillBackground(True)
+
+
     def ekran(self):
         if(w.isFullScreen()==False):
             w.showFullScreen()
         else:
-            w.showNormal()    
+            w.showNormal()
 
     def center(self):
         screen = QtGui.QDesktopWidget().screenGeometry()
         size =  self.geometry()
         cntr=(screen.width()-size.width())/2
-  #      self.move((screen.width()-size.width())/2, 0)
         self.setGeometry(cntr,0,size.width(),size.height())
 
     def artir(self):
@@ -133,11 +151,8 @@ class Cink(QTermWidget):
         w.close()
 
 if __name__=='__main__':
-    a=Qt.QApplication(sys.argv)
+    app=Qt.QApplication(sys.argv)
     w = Cink()
-    w.setScrollBarPosition(2)
-    w.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-    w.setColorScheme(2)
     w.show()
     kisayol6=QShortcut("Ctrl+F11",w,w.ekran)
     art=QShortcut("ALT+k",w,w.artir)
@@ -150,9 +165,11 @@ if __name__=='__main__':
     kisayol3=QShortcut("ALT+s",w,sari)
     transparent_art=QShortcut("Ctrl+q",w,w.transparent_artma)
     transparent_azl=QShortcut("Ctrl+w",w,w.transparent_azl)
-    a.exec_()
+    shortcut = QShortcut("Ctrl+a",w,w.setHorizontal)
+    shortcut = QShortcut("Ctrl+g",w,w.setVertical)
+    app.exec_()
 
 
 
 
-# kisayol4=QShortcut("SHIFT+CTRL+F11",w,tamekran)
+
