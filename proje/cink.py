@@ -10,7 +10,6 @@ from  PyQt4.Qt import QMainWindow
 from PyQt4.QtGui import QShortcut
 #from QTermWidget import QTermWidget
 
-
 def sari():
     w.setColorScheme(3)
 def gri():
@@ -22,49 +21,60 @@ def yesil():
 
 class Cink(Qt.QMainWindow):
     def __init__(self):
-        QMainWindow.__init__(self)
-        self.resize(640,320)
-        self.setCentralWidget(self.createWidget())
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.center()
+        QMainWindow.__init__(self) #QMainWindow tanımlanıyor.
+        self.resize(640,320) #QMainWindow'un başlangıç büyüklüğü belirleniyor.
+        self.setCentralWidget(self.createWidget()) #Widget yaratılıp mainwindowun üstüne yerleştiriliyor.
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
+        self.center() #mainwindow ortalanıyor.
+
+
+# widgetin yatay-dikey olarak bölünmesi--------
 
     def createWidget(self):
-        widget=QTermWidget.QTermWidget()
-        widget.setColorScheme(2)
-        widget.setScrollBarPosition(2)
-        widget.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        widget=QTermWidget.QTermWidget() #widget nesnesi üretiliyor.
+        widget.setColorScheme(2) #widgetin rengi belirleniyor.
+        widget.setScrollBarPosition(2) #widgetin scroolbarın yeri belirleniyor.
+        widget.setWindowFlags(QtCore.Qt.FramelessWindowHint) #menubar kaldırılıyor.
         return widget
 
-    def setVertical(self):
-        splitter = Qt.QSplitter(self)
-        splitter.setAutoFillBackground(True)
-        newWidget=createWidget()
+    def setVertical(self): #dikey olarak bölme fonksiyonu
+        #splitter = Qt.QSplitter(self)
+        #splitter.setAutoFillBackground(True)
+        newWidget=self.createWidget()
         splitter.setOrientation(Qt.Qt.Vertical)
         splitter.addWidget(newWidget)
         newWidget.setAutoFillBackground(True)
 
-    def setHorizontal(self):
-        splitter = Qt.QSplitter(self)
-        splitter.setAutoFillBackground(True)
-        newWidget=createWidget()
+    def setHorizontal(self): #yatay olarak bölme fonksiyonu
+        #splitter = Qt.QSplitter(self)
+        #splitter.setAutoFillBackground(True)
+        newWidget=self.createWidget()
         splitter.setOrientation(Qt.Qt.Horizontal)
         splitter.addWidget(newWidget)
         newWidget.setAutoFillBackground(True)
 
+#Bölme işlemlerinde hatalar olduğundan dolayı şu anlık kapalıdır.
 
-    def ekran(self):
+#-----------------------------------------------------
+
+
+
+    def ekran(self): #tam ekran yapma fonksiyonu
         if(w.isFullScreen()==False):
             w.showFullScreen()
         else:
             w.showNormal()
 
-    def center(self):
+
+
+    def center(self): #mainwindowun ortalanması
         screen = QtGui.QDesktopWidget().screenGeometry()
         size =  self.geometry()
         cntr=(screen.width()-size.width())/2
         self.setGeometry(cntr,0,size.width(),size.height())
+#pencere boyutlarının ayarlanması----------------------------
 
-    def artir(self):
+    def artir(self): #pencerenin yanlara doğrultusunda büyütülmesi
         mesafe=QtGui.QDesktopWidget().screenGeometry().width()-w.width()
         while(True):
             screen = QtGui.QDesktopWidget().screenGeometry()
@@ -87,7 +97,7 @@ class Cink(Qt.QMainWindow):
             else:
                 break
 
-    def azalt(self):
+    def azalt(self): #pencerenin yanlara doğru küçültülmesi
         while(True):
             screen = QtGui.QDesktopWidget().screenGeometry()
             en=w.width()
@@ -110,7 +120,9 @@ class Cink(Qt.QMainWindow):
                     break
             break
 
-    def boy_artir(self):
+
+
+    def boy_artir(self): #pencerenin yukarı-aşağı doğrultusunda büyütülmesi
         en=w.width()
         boy=w.height()
         while(True):
@@ -126,7 +138,7 @@ class Cink(Qt.QMainWindow):
                     break
 
 
-    def boy_azalt(self):
+    def boy_azalt(self): #pencerenin yukarı-aşağı doğrultusunda küçültülmesi
         while(True):
             screen = QtGui.QDesktopWidget().screenGeometry()
             en=w.width()
@@ -141,35 +153,63 @@ class Cink(Qt.QMainWindow):
             else:
                 break
 
-    def transparent_artma(self):
+
+#şeffaflığın ayarlanması-------------------------------------------
+
+    def transparent_artma(self): #şeffaflığın artması
         w.setWindowOpacity(0.6)
 
-    def transparent_azl(self):
+
+    def transparent_azl(self): #şeffaflığın azaltılması
         w.setWindowOpacity(1.0)
 
-    def kapama(self):
-        w.close()
+#------------------------------------------------------------
+    def keyPressEvent(self, event): #klavyeden tuşların girilmesi
+        if type(event) == QtGui.QKeyEvent:
+            #here accept the event and do something
+            if (event.key()) == 16777264:
+                print "aaa"
+            print event.key()
+            event.accept()
+        else:
+            event.ignore()
+
+#QTermWidgeti import ettiğimizde keyPressEvent fonksiyonunu tekrar yazdığımızda daha önceki tanımlanmış olan kabul edilip işleniyor. O yüzden bu kısmı QTermWidgetin kaynak kodlarının içine eklemeyi düşünüyoruz.
+
+#--------------------------------------------------------------
 
 if __name__=='__main__':
     app=Qt.QApplication(sys.argv)
     w = Cink()
     w.show()
+    #form = Qt.QMainWindow()
+    #form.resize(w.width(),w.height())
+    #form.autoFillBackground()
+    #splitter = Qt.QSplitter(form)
+    #splitter.resize(w.width(),w.height())
+    #splitter.setAutoFillBackground(True)
+    #splitter.addWidget(w)
+    #w.setAutoFillBackground(True)
+    #form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+    #screen = QtGui.QDesktopWidget().screenGeometry()
+    #size =  form.geometry()
+    #cntr=(screen.width()-size.width())/2
+    #form.setGeometry(cntr,0,size.width(),size.height())
+
+
     kisayol6=QShortcut("Ctrl+F11",w,w.ekran)
     art=QShortcut("ALT+k",w,w.artir)
     azalt=QShortcut("ALT+m",w,w.azalt)
     boy_art=QShortcut("ALT+j",w,w.boy_artir)
     boy_azalt=QShortcut("ALT+n",w,w.boy_azalt)
-    kapat=QShortcut("ALT+c",w,w.kapama)
+    kapat=QShortcut("ALT+c",w,w.close)
     kisayol1=QShortcut("Alt+g",w,gri)
     kisayol2=QShortcut("ALT+y",w,yesil)
     kisayol3=QShortcut("ALT+s",w,sari)
-    transparent_art=QShortcut("Ctrl+q",w,w.transparent_artma)
+    transparent_art=QShortcut("Ctrl+e",w,w.transparent_artma)
     transparent_azl=QShortcut("Ctrl+w",w,w.transparent_azl)
     shortcut = QShortcut("Ctrl+a",w,w.setHorizontal)
     shortcut = QShortcut("Ctrl+g",w,w.setVertical)
+    #form.show()
     app.exec_()
-
-
-
-
 
