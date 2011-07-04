@@ -23,12 +23,15 @@ class Cink(Qt.QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self) #QMainWindow tanımlanıyor.
         self.resize(640,320) #QMainWindow'un başlangıç büyüklüğü belirleniyor.
-        self.setCentralWidget(self.createWidget()) #Widget yaratılıp mainwindowun üstüne yerleştiriliyor.
+        self.splitter = Qt.QSplitter(self)
+        self.splitter.resize(640,320)
+        #self.setCentralWidget(self.createWidget()) #Widget yaratılıp mainwindowun üstüne yerleştiriliyor.
+        self.splitter.addWidget(self.createWidget())
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
         self.center() #mainwindow ortalanıyor.
 
 
-# widgetin yatay-dikey olarak bölünmesi--------
+
 
     def createWidget(self):
         widget=QTermWidget.QTermWidget() #widget nesnesi üretiliyor.
@@ -41,21 +44,20 @@ class Cink(Qt.QMainWindow):
         #splitter = Qt.QSplitter(self)
         #splitter.setAutoFillBackground(True)
         newWidget=self.createWidget()
-        splitter.setOrientation(Qt.Qt.Vertical)
-        splitter.addWidget(newWidget)
+        self.splitter.setOrientation(Qt.Qt.Vertical)
+        self.splitter.addWidget(newWidget)
         newWidget.setAutoFillBackground(True)
 
     def setHorizontal(self): #yatay olarak bölme fonksiyonu
         #splitter = Qt.QSplitter(self)
         #splitter.setAutoFillBackground(True)
         newWidget=self.createWidget()
-        splitter.setOrientation(Qt.Qt.Horizontal)
-        splitter.addWidget(newWidget)
+        self.splitter.setOrientation(Qt.Qt.Horizontal)
+        self.splitter.addWidget(newWidget)
         newWidget.setAutoFillBackground(True)
 
 #Bölme işlemlerinde hatalar olduğundan dolayı şu anlık kapalıdır.
 
-#-----------------------------------------------------
 
 
 
@@ -182,21 +184,6 @@ if __name__=='__main__':
     app=Qt.QApplication(sys.argv)
     w = Cink()
     w.show()
-    #form = Qt.QMainWindow()
-    #form.resize(w.width(),w.height())
-    #form.autoFillBackground()
-    #splitter = Qt.QSplitter(form)
-    #splitter.resize(w.width(),w.height())
-    #splitter.setAutoFillBackground(True)
-    #splitter.addWidget(w)
-    #w.setAutoFillBackground(True)
-    #form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-    #screen = QtGui.QDesktopWidget().screenGeometry()
-    #size =  form.geometry()
-    #cntr=(screen.width()-size.width())/2
-    #form.setGeometry(cntr,0,size.width(),size.height())
-
-
     kisayol6=QShortcut("Ctrl+F11",w,w.ekran)
     art=QShortcut("ALT+k",w,w.artir)
     azalt=QShortcut("ALT+m",w,w.azalt)
