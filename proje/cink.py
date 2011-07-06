@@ -7,7 +7,7 @@ from PyQt4 import Qt
 import QTermWidget
 from  PyQt4.Qt import QSplitter
 from  PyQt4.Qt import QMainWindow
-from PyQt4.QtGui import QShortcut
+from PyQt4.QtGui import *
 #from QTermWidget import QTermWidget
 
 def sari():
@@ -28,9 +28,13 @@ class Cink(Qt.QMainWindow):
         #self.setCentralWidget(self.createWidget()) #Widget yaratılıp mainwindowun üstüne yerleştiriliyor.
         self.splitter.addWidget(self.createWidget())
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
+        self.tabBar=QtGui.QTabBar(self)
+        self.tabBar.addTab("Kabuk1")
         self.center() #mainwindow ortalanıyor.
 
-
+    def newTab(self):
+        self.tabBar.addTab("Kabuk")
+        self.center()
 
 
     def createWidget(self):
@@ -74,6 +78,7 @@ class Cink(Qt.QMainWindow):
         size =  self.geometry()
         cntr=(screen.width()-size.width())/2
         self.setGeometry(cntr,0,size.width(),size.height())
+        self.tabBar.setGeometry(0,self.height()-25,200*self.tabBar.count()-100,100)
 #pencere boyutlarının ayarlanması----------------------------
 
     def artir(self): #pencerenin yanlara doğrultusunda büyütülmesi
@@ -197,6 +202,7 @@ if __name__=='__main__':
     transparent_azl=QShortcut("Ctrl+w",w,w.transparent_azl)
     shortcut = QShortcut("Ctrl+a",w,w.setHorizontal)
     shortcut = QShortcut("Ctrl+g",w,w.setVertical)
+    shortcut = QShortcut("Shift+Ctrl+n",w,w.newTab)
     #form.show()
     app.exec_()
 
