@@ -25,7 +25,7 @@ class Cink(Qt.QMainWindow):
         self.resize(640,320) #QMainWindow'un başlangıç büyüklüğü belirleniyor.
         self.splitter = Qt.QSplitter(self)
         self.splitter.resize(640,320)
-        #self.setCentralWidget(self.createWidget()) #Widget yaratılıp mainwindowun üstüne yerleştiriliyor.
+        self.setCentralWidget(self.splitter) #Yaratılan spliter mainwindowun üstüne yerleştiriliyor.
         self.splitter.addWidget(self.createWidget())
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
         self.tabBar=QtGui.QTabBar(self)
@@ -35,7 +35,7 @@ class Cink(Qt.QMainWindow):
     def newTab(self):
         self.tabBar.addTab("Kabuk")
         self.center()
-
+#Terminal widget oluşturuluyor
 
     def createWidget(self):
         widget=QTermWidget.QTermWidget() #widget nesnesi üretiliyor.
@@ -43,6 +43,8 @@ class Cink(Qt.QMainWindow):
         widget.setScrollBarPosition(2) #widgetin scroolbarın yeri belirleniyor.
         widget.setWindowFlags(QtCore.Qt.FramelessWindowHint) #menubar kaldırılıyor.
         return widget
+#Dikey olarak bölümlendirme yapılıyor
+
 
     def setVertical(self): #dikey olarak bölme fonksiyonu
         #splitter = Qt.QSplitter(self)
@@ -52,6 +54,10 @@ class Cink(Qt.QMainWindow):
         self.splitter.addWidget(newWidget)
         newWidget.setAutoFillBackground(True)
 
+
+#Yatay olarak bölümlendirme yapılıyor
+
+
     def setHorizontal(self): #yatay olarak bölme fonksiyonu
         #splitter = Qt.QSplitter(self)
         #splitter.setAutoFillBackground(True)
@@ -60,16 +66,16 @@ class Cink(Qt.QMainWindow):
         self.splitter.addWidget(newWidget)
         newWidget.setAutoFillBackground(True)
 
-#Bölme işlemlerinde hatalar olduğundan dolayı şu anlık kapalıdır.
-
-
 
 
     def ekran(self): #tam ekran yapma fonksiyonu
         if(w.isFullScreen()==False):
             w.showFullScreen()
+            w.splitter.resize(w.width(),w.height())
+
         else:
             w.showNormal()
+            w.splitter.resize(w.width(),w.height())
 
 
 

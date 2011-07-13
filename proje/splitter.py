@@ -16,12 +16,15 @@ class Cink(Qt.QMainWindow):
         QMainWindow.__init__(self) #QMainWindow tanımlanıyor.
         self.resize(640,320) #QMainWindow'un başlangıç büyüklüğü belirleniyor.
         self.splitter = Qt.QSplitter(self)
-        self.splitter.resize(640,320)
-        #self.setCentralWidget(self.createWidget()) #Widget yaratılıp mainwindowun üstüne yerleştiriliyor.
-        self.firsWidget=self.createWidget()
-        self.firsWidget.setParent(self.splitter)
+        #self.splitter.resize(640,320)
+        self.setAutoFillBackground(True)
+        self.splitter.setOpaqueResize(True)
+        #self.splitter.resize(640,320)
+        self.setCentralWidget(self.splitter) #Yaratılan splitter mainwindowun üstüne yerleştiriliyor.
+        self.firstWidget=self.createWidget()
+        self.firstWidget.setParent(self.splitter)
         #self.splitter.addWidget(self.createWidget())
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
+        #self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
         self.center() #mainwindow ortalanıyor.
 
 
@@ -33,8 +36,6 @@ class Cink(Qt.QMainWindow):
         return widget
 
     def Vertical(self): #dikey olarak bölme fonksiyonu
-        #splitter = Qt.QSplitter(self)
-        #splitter.setAutoFillBackground(True)
         selectedWidget=self.focusWidget().parent()
         selectedSplitter=selectedWidget.parent()
         selectedWidget.hide()
@@ -42,27 +43,28 @@ class Cink(Qt.QMainWindow):
         selectedSplitter.setOrientation(Qt.Qt.Vertical)
         splitter1=Qt.QSplitter(selectedSplitter)
         splitter2=Qt.QSplitter(selectedSplitter)
+        splitter1.setAutoFillBackground(True)
+        splitter2.setAutoFillBackground(True)
         selectedWidget.setParent(splitter1)
         newWidget.setParent(splitter2)
+        newWidget.setFocus()
         selectedWidget.show()
         newWidget.show()
-        #newWidget.setAutoFillBackground(True)
 
     def Horizontal(self): #yatay olarak bölme fonksiyonu
-        #splitter = Qt.QSplitter(self)
-        #splitter.setAutoFillBackground(True)
         selectedWidget=self.focusWidget().parent()
         selectedSplitter=selectedWidget.parent()
         selectedWidget.hide()
         newWidget=self.createWidget()
         selectedSplitter.setOrientation(Qt.Qt.Horizontal)
-        splitter1=Qt.QSplitter(selectedSplitter)
-        splitter2=Qt.QSplitter(selectedSplitter)
+        selectedSplitter.setOpaqueResize(True)
+        splitter1=Qt.QSplitter(self.splitter)
+        splitter2=Qt.QSplitter(self.splitter)
         selectedWidget.setParent(splitter1)
         newWidget.setParent(splitter2)
+        newWidget.setFocus()
         selectedWidget.show()
         newWidget.show()
-        #newWidget.setAutoFillBackground(True)
 
 
     def center(self): #mainwindowun ortalanması
