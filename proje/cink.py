@@ -24,7 +24,6 @@ class Cink(Qt.QMainWindow):
         QMainWindow.__init__(self) #QMainWindow tanımlanıyor.
         self.resize(640,320) #QMainWindow'un başlangıç büyüklüğü belirleniyor.
         self.splitter = Qt.QSplitter(self)
-        self.splitter.resize(640,320)
         self.setCentralWidget(self.splitter) #Yaratılan spliter mainwindowun üstüne yerleştiriliyor.
         self.splitter.addWidget(self.createWidget())
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
