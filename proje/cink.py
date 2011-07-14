@@ -24,7 +24,7 @@ class Cink(Qt.QMainWindow):
         QMainWindow.__init__(self) #QMainWindow tanımlanıyor.
         self.resize(640,320) #QMainWindow'un başlangıç büyüklüğü belirleniyor.
         self.splitter = Qt.QSplitter(self)
-        self.setCentralWidget(self.splitter) #Yaratılan spliter mainwindowun üstüne yerleştiriliyor.
+        self.setCentralWidget(self.splitter) #Yaratılan splitter mainwindowun üstüne yerleştiriliyor.
         self.splitter.addWidget(self.createWidget())
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
         self.tabBar=QtGui.QTabBar(self)
@@ -46,30 +46,50 @@ class Cink(Qt.QMainWindow):
 
 
     def Vertical(self): #dikey olarak bölme fonksiyonu
-        #splitter = Qt.QSplitter(self)
-        #splitter.setAutoFillBackground(True)
+        selectedWidget=w.focusWidget().parent()
+        selectedSplitter=selectedWidget.parent()
+        selectedWidget.hide()
         newWidget=self.createWidget()
-        self.splitter.setOrientation(Qt.Qt.Vertical)
-        self.splitter.addWidget(newWidget)
-        newWidget.setAutoFillBackground(True)
+        splitter1=Qt.QSplitter(selectedSplitter)
+        selectedWidget.setParent(splitter1)
+        splitter2=Qt.QSplitter(selectedSplitter)
+        newWidget.setParent(splitter2)
+        selectedSplitter.setOrientation(Qt.Qt.Vertical)
+        selectedWidget.show()
+        newWidget.show()
+        newWidget.setFocus()
+
 
 
 #Yatay olarak bölümlendirme yapılıyor
 
 
     def Horizontal(self): #yatay olarak bölme fonksiyonu
-        #splitter = Qt.QSplitter(self)
-        #splitter.setAutoFillBackground(True)
+        selectedWidget=w.focusWidget().parent()
+        selectedSplitter=selectedWidget.parent()
+        selectedWidget.hide()
         newWidget=self.createWidget()
-        self.splitter.setOrientation(Qt.Qt.Horizontal)
-        self.splitter.addWidget(newWidget)
-        newWidget.setAutoFillBackground(True)
+        selectedSplitter.setOrientation(Qt.Qt.Horizontal)
+        splitter1=Qt.QSplitter(selectedSplitter)
+        selectedWidget.setParent(splitter1)
+        splitter2=Qt.QSplitter(selectedSplitter)
+        newWidget.setParent(splitter2)
+        selectedWidget.show()
+        newWidget.show()
+        newWidget.setFocus()
+
+#bölümleri kapatma işini yapıyor
 
     def yokedici(self):
-        secilenWidget=self.focusWidget().parent()
+        secilenWidget=w.focusWidget().parent()
         secilenSplitter=secilenWidget.parent()
-        secilenWidget.hide()
-        secilenSplitter.hide()
+        parentSplitter=secilenSplitter.parent()
+        secilenWidget.deleteLater()
+        secilenSplitter.deleteLater()
+       # parentSplitter.children().setFocus()
+       # if(self.splitter.widget())
+
+
 
     def ekran(self): #tam ekran yapma fonksiyonu
         if(w.isFullScreen()==False):
@@ -207,10 +227,10 @@ if __name__=='__main__':
     kisayol3=QShortcut("ALT+s",w,sari)
     transparent_art=QShortcut("Ctrl+e",w,w.transparent_artma)
     transparent_azl=QShortcut("Ctrl+w",w,w.transparent_azl)
-    shortcut = QShortcut("Ctrl+a",w,w.Horizontal)
-    shortcut = QShortcut("Ctrl+g",w,w.Vertical)
+    shortcut = QShortcut("Ctrl+Shift+a",w,w.Horizontal)
+    shortcut = QShortcut("Ctrl+Shift+g",w,w.Vertical)
     shortcut = QShortcut("Shift+Ctrl+n",w,w.newTab)
-    shortcut = QShortcut("Ctrl+d",w,w.yokedici)
+    shortcut = QShortcut("Ctrl+Shift+d",w,w.yokedici)
     #form.show()
     app.exec_()
 
