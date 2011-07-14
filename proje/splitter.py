@@ -20,10 +20,11 @@ class Cink(Qt.QMainWindow):
         self.splitter.setOpaqueResize(True)
         self.setCentralWidget(self.splitter) #Yaratılan splitter mainwindowun üstüne yerleştiriliyor.
         self.firstWidget=self.createWidget()
+        print"ilk",self.firstWidget
+        print "splitter",self.splitter
         self.firstWidget.setParent(self.splitter)
         #self.splitter.addWidget(self.createWidget())
         #self.setWindowFlags(QtCore.Qt.FramelessWindowHint) #QMainWindow'un üstündeki menubar kaldırılıyor.
-        self.center() #mainwindow ortalanıyor.
 
 
     def createWidget(self):
@@ -34,50 +35,42 @@ class Cink(Qt.QMainWindow):
         return widget
 
     def Vertical(self): #dikey olarak bölme fonksiyonu
-        selectedWidget=self.focusWidget().parent()
+        selectedWidget=w.focusWidget().parent()
         selectedSplitter=selectedWidget.parent()
         selectedWidget.hide()
         newWidget=self.createWidget()
-        selectedSplitter.setOrientation(Qt.Qt.Vertical)
         splitter1=Qt.QSplitter(selectedSplitter)
-        splitter2=Qt.QSplitter(selectedSplitter)
         selectedWidget.setParent(splitter1)
+        splitter2=Qt.QSplitter(selectedSplitter)
         newWidget.setParent(splitter2)
-        #splitter1.addWidget(selectedWidget)
-        #splitter2.addWidget(newWidget)
-        newWidget.setFocus()
+        selectedSplitter.setOrientation(Qt.Qt.Vertical)
         selectedWidget.show()
         newWidget.show()
+        newWidget.setFocus()
+
 
     def Horizontal(self): #yatay olarak bölme fonksiyonu
-        selectedWidget=self.focusWidget().parent()
+        selectedWidget=w.focusWidget().parent()
         selectedSplitter=selectedWidget.parent()
         selectedWidget.hide()
         newWidget=self.createWidget()
         selectedSplitter.setOrientation(Qt.Qt.Horizontal)
         splitter1=Qt.QSplitter(selectedSplitter)
-        splitter2=Qt.QSplitter(selectedSplitter)
         selectedWidget.setParent(splitter1)
+        splitter2=Qt.QSplitter(selectedSplitter)
         newWidget.setParent(splitter2)
-        #newWidget.setFocus()
         selectedWidget.show()
         newWidget.show()
-
-
-    def center(self): #mainwindowun ortalanması
-        screen = QtGui.QDesktopWidget().screenGeometry()
-        size =  self.geometry()
-        cntr=(screen.width()-size.width())/2
-        self.setGeometry(cntr,0,size.width(),size.height())
-        #self.tabBar.setGeometry(0,self.height()-25,200*self.tabBar.count()-100,100)
+        newWidget.setFocus()
 
 if __name__=='__main__':
     app=Qt.QApplication(sys.argv)
     w = Cink()
     w.show()
-    shortcut = QShortcut("Ctrl+a",w,w.Horizontal)
-    shortcut = QShortcut("Ctrl+g",w,w.Vertical)
+    shortcut = QShortcut("Ctrl+Shift+a",w,w.Horizontal)
+    shortcut = QShortcut("Ctrl+Shift+g",w,w.Vertical)
     app.exec_()
+
 
 
 

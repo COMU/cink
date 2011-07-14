@@ -45,7 +45,7 @@ class Cink(Qt.QMainWindow):
 #Dikey olarak bölümlendirme yapılıyor
 
 
-    def setVertical(self): #dikey olarak bölme fonksiyonu
+    def Vertical(self): #dikey olarak bölme fonksiyonu
         #splitter = Qt.QSplitter(self)
         #splitter.setAutoFillBackground(True)
         newWidget=self.createWidget()
@@ -57,7 +57,7 @@ class Cink(Qt.QMainWindow):
 #Yatay olarak bölümlendirme yapılıyor
 
 
-    def setHorizontal(self): #yatay olarak bölme fonksiyonu
+    def Horizontal(self): #yatay olarak bölme fonksiyonu
         #splitter = Qt.QSplitter(self)
         #splitter.setAutoFillBackground(True)
         newWidget=self.createWidget()
@@ -65,16 +65,18 @@ class Cink(Qt.QMainWindow):
         self.splitter.addWidget(newWidget)
         newWidget.setAutoFillBackground(True)
 
-
+    def yokedici(self):
+        secilenWidget=self.focusWidget().parent()
+        secilenSplitter=secilenWidget.parent()
+        secilenWidget.hide()
+        secilenSplitter.hide()
 
     def ekran(self): #tam ekran yapma fonksiyonu
         if(w.isFullScreen()==False):
             w.showFullScreen()
-            w.splitter.resize(w.width(),w.height())
 
         else:
             w.showNormal()
-            w.splitter.resize(w.width(),w.height())
 
 
 
@@ -205,9 +207,10 @@ if __name__=='__main__':
     kisayol3=QShortcut("ALT+s",w,sari)
     transparent_art=QShortcut("Ctrl+e",w,w.transparent_artma)
     transparent_azl=QShortcut("Ctrl+w",w,w.transparent_azl)
-    shortcut = QShortcut("Ctrl+a",w,w.setHorizontal)
-    shortcut = QShortcut("Ctrl+g",w,w.setVertical)
+    shortcut = QShortcut("Ctrl+a",w,w.Horizontal)
+    shortcut = QShortcut("Ctrl+g",w,w.Vertical)
     shortcut = QShortcut("Shift+Ctrl+n",w,w.newTab)
+    shortcut = QShortcut("Ctrl+d",w,w.yokedici)
     #form.show()
     app.exec_()
 
