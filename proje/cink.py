@@ -84,10 +84,17 @@ class Cink(Qt.QMainWindow):
         secilenWidget=w.focusWidget().parent()
         secilenSplitter=secilenWidget.parent()
         parentSplitter=secilenSplitter.parent()
-        secilenWidget.deleteLater()
-        secilenSplitter.deleteLater()
-       # parentSplitter.children().setFocus()
-       # if(self.splitter.widget())
+        #secilenWidget.deleteLater()
+        #secilenSplitter.deleteLater()
+        if(self.splitter.count()==1):
+            secilenWidget.deleteLater()
+            new=self.createWidget()
+            self.splitter.addWidget(new)
+            new.setFocus()
+
+        else:
+            secilenWidget.deleteLater()
+            secilenSplitter.deleteLater()
 
 
 
