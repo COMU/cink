@@ -9,6 +9,7 @@ class Console():
 		terminal.fork_command_full(Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash"], [], GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None,)
 		win = Gtk.Window()
 		win.connect('delete-event', Gtk.main_quit)
+		win.set_opacity(0.8)
 		win.set_position(Gtk.WindowPosition.CENTER)
 		win.add(terminal)
 		win.show_all()
