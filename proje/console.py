@@ -5,11 +5,10 @@ import gtk
 import vte
 import os
 
-
 win=gtk.Window()
-class Console(gtk.Window):
+class Console(vte.Terminal):
 
-	def __init__(self):
+	def __init__(self, *args, **kwds):
 		terminal = vte.Terminal()
 		terminal.fork_command('bash')
 		win.set_resizable(False)
@@ -20,8 +19,8 @@ class Console(gtk.Window):
 		win.show_all()
 
 	def key_pressed(self,widget,event):
-    		if event.keyval == gtk.gdk.keyval_from_name( 'space') and event.state & gtk.gdk.CONTROL_MASK:
-      			return self.seffaf()
+    		if event.keyval == gtk.gdk.keyval_from_name('space') and event.state & gtk.gdk.CONTROL_MASK:
+      			return self.seffaflik_kaldir()
 		if event.keyval == gtk.gdk.keyval_from_name('F11') :
 			return self.seffaf()
     		return False	
@@ -31,7 +30,10 @@ class Console(gtk.Window):
 
 	def console_bol(self):
 		win.add(terminal)
-	
+
+	def seffaflik_kaldir(self):
+		win.set_opacity(1.0)	
+
 	def seffaf(self):
 		win.set_opacity(0.8)
 	
