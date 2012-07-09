@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
-#from gi.repository import Gtk, Vte, Gdk
 from gi.repository import GLib
 import gtk
 import vte
 import os
-
 
 class Console():
 
@@ -13,6 +11,7 @@ class Console():
 		terminal = vte.Terminal()
 		terminal.fork_command('bash')
 		win = gtk.Window()
+		win.set_resizable(False)
 		win.connect('delete-event', gtk.main_quit)
 		win.set_opacity(0.8) #konsolu seffaf goruntuleme
 		win.move(300,0) #konsolun konumu
