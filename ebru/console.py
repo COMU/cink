@@ -6,10 +6,10 @@ class Console:
 	def __init__(self):
 	 	
 		terminal = vte.Terminal()
-		terminal.fork_command()
+		terminal.fork_command('bash')
 		terminal.connect('event',self.right_click)
-		terminal.set_opacity(1)
 		win = gtk.Window()
+		terminal.set_background_transparent(45000)
 	        win.add(terminal)
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
 	        win.show_all()
