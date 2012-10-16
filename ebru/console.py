@@ -8,6 +8,7 @@ class Console(vte.Terminal):
 	 	
 		terminal = vte.Terminal()
 		terminal.fork_command('bash')
+		menu = gtk.Menu()
 		terminal.connect('event',self.right_click)
 		terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
 	        win.add(terminal)
@@ -15,7 +16,7 @@ class Console(vte.Terminal):
 		self.is_fullscreen = False
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
                 win.show_all()
-#		gtk.Window(type=gtk.WINDOW_TOPLEVEL)
+
 	def full_screen(self, widget, event):
 		 if  event.keyval == gtk.keysyms.F11:
 			if self.is_fullscreen == False:
@@ -26,11 +27,24 @@ class Console(vte.Terminal):
                                 self.is_fullscreen = False
 
 	
-	def right_click(self,terminal,event):
+	def right_click(self,widget,event):
 		if event.type == gtk.gdk.BUTTON_PRESS:
 	            if event.button == 3:    # 1 sol tus,2 orta tus icin
-        	        print "sag tusa basildi."
-
+			m = gtk.Menu()
+			item1 = gtk.MenuItem("Copy")
+			item2 = gtk.MenuItem("Paste")
+			item3 = gtk.MenuItem("Close Tab")
+			item4 = gtk.MenuItem("Quit")			
+			item1.show()
+			m.append(item1)
+			item2.show()
+                        m.append(item2)
+			item3.show()
+                        m.append(item3)
+			item4.show()
+                        m.append(item4)
+           		m.popup(None, None, None, event.button, event.time, None)
+ 
 
 if __name__ == '__main__':
 	w = Console()
