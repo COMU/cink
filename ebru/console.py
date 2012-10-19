@@ -21,15 +21,17 @@ class Console(vte.Terminal,gtk.Notebook):
 
 		page[0].add(terminal)
 		page[1].add(terminal)
-		notebook.append_page(page[0],gtk.Label('tab1'))
-
-	
+		notebook.append_page(page[0],gtk.Label('tab1'))	
 		notebook.append_page(page[1], gtk.Label('tab2'))
 #		notebook.set_tab_reorderable(page[0], True)   sekmelerin tasinabilmesi icin
-#		notebook.set_tab_reorderable(page[1], True)
-				
+#		notebook.set_tab_reorderable(page[1], True)				
 		win.add(notebook) 
 		#win.add(terminal)
+		#vpaned = gtk.VPaned()   yatay bolme icin
+		#win.add(vpaned)
+		#vpaned.show()
+		#vpaned.add1(terminal)
+		#vpaned.add2(terminal)
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
 	        win.connect('key-press-event',self.full_screen)
 	        terminal.connect('event',self.right_click)
