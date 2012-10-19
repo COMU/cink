@@ -2,19 +2,37 @@ import gtk
 import vte
 
 win = gtk.Window()
-class Console(vte.Terminal):
+notebook = gtk.Notebook()
+class Console(vte.Terminal,gtk.Notebook):
 
-	def __init__(self):
-	 	
+	def __init__(self):	 	
 		terminal = vte.Terminal()
+	        self.is_fullscreen = False
 		terminal.fork_command('bash')
-		menu = gtk.Menu()
-		terminal.connect('event',self.right_click)
 		terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
-	        win.add(terminal)
-		win.connect('key-press-event',self.full_screen)
-		self.is_fullscreen = False
+#		notebook = gtk.Notebook()
+		page = []
+		page.append(gtk.VBox())
+		win.reparent(page[0])
+		notebook.set_tab_pos (gtk.POS_BOTTOM);  # sekme isimlerinin altta cikmasi icin
+#		win.set_parent(page[0])
+		#win.get_parent()  parent tab in ogrenilmesi icin
+		page.append(gtk.VBox())
+
+		page[0].add(terminal)
+		page[1].add(terminal)
+		notebook.append_page(page[0],gtk.Label('tab1'))
+
+	
+		notebook.append_page(page[1], gtk.Label('tab2'))
+#		notebook.set_tab_reorderable(page[0], True)   sekmelerin tasinabilmesi icin
+#		notebook.set_tab_reorderable(page[1], True)
+				
+		win.add(notebook) 
+		#win.add(terminal)
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
+	        win.connect('key-press-event',self.full_screen)
+	        terminal.connect('event',self.right_click)
                 win.show_all()
 
 	def full_screen(self, widget, event):
@@ -25,8 +43,6 @@ class Console(vte.Terminal):
                         elif self.is_fullscreen == True:
                                 win.unfullscreen()
                                 self.is_fullscreen = False
-
-	
 	def right_click(self,widget,event):
 		if event.type == gtk.gdk.BUTTON_PRESS:
 	            if event.button == 3:    # 1 sol tus,2 orta tus icin
@@ -34,7 +50,7 @@ class Console(vte.Terminal):
 			item1 = gtk.MenuItem("Copy")
 			item2 = gtk.MenuItem("Paste")
 			item3 = gtk.MenuItem("Close Tab")
-			item4 = gtk.MenuItem("Quit")			
+			item4 = gtk.MenuItem("Quit")		
 			item1.show()
 			m.append(item1)
 			item2.show()
