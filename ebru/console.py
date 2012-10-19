@@ -33,9 +33,13 @@ class Console(vte.Terminal,gtk.Notebook):
 		#vpaned.add1(terminal)
 		#vpaned.add2(terminal)
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
+		notebook.connect("switch-page", self.pageSelected)
 	        win.connect('key-press-event',self.full_screen)
 	        terminal.connect('event',self.right_click)
                 win.show_all()
+	def pageSelected(self, notebook, page, pagenum):
+                name = notebook.get_tab_label(notebook.get_nth_page(pagenum))
+                print notebook.get_current_page()	
 
 	def full_screen(self, widget, event):
 		 if  event.keyval == gtk.keysyms.F11:
