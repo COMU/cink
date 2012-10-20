@@ -1,21 +1,21 @@
 import gtk 
 import vte
 
-terminal = vte.Terminal()
+#terminal = vte.Terminal()
 win = gtk.Window()
 notebook = gtk.Notebook()
 class Console(vte.Terminal,gtk.Notebook,gtk.Window):
 
 	def __init__(self):	 	
         
-		#terminal = vte.Terminal()
+		self.terminal = vte.Terminal()
 	        self.is_fullscreen = False
-		terminal.fork_command('bash')	
-		terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
+		self.terminal.fork_command('bash')	
+		self.terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
 		win.connect('key-press-event',self.full_screen)
-	        terminal.connect('event',self.right_click)
-		win.add(terminal)
+	        self.terminal.connect('event',self.right_click)
+		win.add(self.terminal)
                 win.show_all()
 	
 	def pageSelected(self, notebook, page, pagenum):
@@ -42,7 +42,9 @@ class Console(vte.Terminal,gtk.Notebook,gtk.Window):
 			item2 = gtk.MenuItem("Paste")
 			item2.connect("activate",self.paste)
 			item3 = gtk.MenuItem("Close Tab")
-			item4 = gtk.MenuItem("Quit")		
+			item4 = gtk.MenuItem("Quit")	
+#			item4.connect("activate",self.quit)	
+			item4.connect("activate", lambda discard: gtk.main_quit())
 			item1.show()
 			m.append(item1)
 			item2.show()
@@ -52,13 +54,14 @@ class Console(vte.Terminal,gtk.Notebook,gtk.Window):
 			item4.show()
                         m.append(item4)
            		m.popup(None, None, None, event.button, event.time, None)
+	def quit():
+		gtk.main_quit()
+		
 	def copy(self, widget=None, data=None):
-		print "*"
-		if terminal.get_has_selection():
-			print "secildi"
-			terminal.copy_clipboard()
+		if self.terminal.get_has_selection():
+			self.terminal.copy_clipboard()
 	def paste(self, widget=None, data=None):
-		terminal.paste_clipboard()
+		self.terminal.paste_clipboard()
 
 if __name__ == '__main__':
 	w = Console()
