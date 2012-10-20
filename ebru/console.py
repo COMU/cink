@@ -1,45 +1,29 @@
 import gtk 
 import vte
 
+terminal = vte.Terminal()
 win = gtk.Window()
 notebook = gtk.Notebook()
-class Console(vte.Terminal,gtk.Notebook):
+class Console(vte.Terminal,gtk.Notebook,gtk.Window):
 
 	def __init__(self):	 	
-		terminal = vte.Terminal()
+        
+		#terminal = vte.Terminal()
 	        self.is_fullscreen = False
-		terminal.fork_command('bash')
+		terminal.fork_command('bash')	
 		terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
-#		notebook = gtk.Notebook()
-		page = []
-		page.append(gtk.VBox())
-		win.reparent(page[0])
-		notebook.set_tab_pos (gtk.POS_BOTTOM);  # sekme isimlerinin altta cikmasi icin
-#		win.set_parent(page[0])
-		#win.get_parent()  parent tab in ogrenilmesi icin
-		page.append(gtk.VBox())
-
-		page[0].add(terminal)
-		page[1].add(terminal)
-		notebook.append_page(page[0],gtk.Label('tab1'))	
-		notebook.append_page(page[1], gtk.Label('tab2'))
-#		notebook.set_tab_reorderable(page[0], True)   sekmelerin tasinabilmesi icin
-#		notebook.set_tab_reorderable(page[1], True)				
-		win.add(notebook) 
-		#win.add(terminal)
-		#vpaned = gtk.VPaned()   yatay bolme icin
-		#win.add(vpaned)
-		#vpaned.show()
-		#vpaned.add1(terminal)
-		#vpaned.add2(terminal)
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
-		notebook.connect("switch-page", self.pageSelected)
-	        win.connect('key-press-event',self.full_screen)
+		win.connect('key-press-event',self.full_screen)
 	        terminal.connect('event',self.right_click)
+		win.add(terminal)
                 win.show_all()
+	
 	def pageSelected(self, notebook, page, pagenum):
-                name = notebook.get_tab_label(notebook.get_nth_page(pagenum))
-                print notebook.get_current_page()	
+		name = notebook.get_tab_label(notebook.get_nth_page(pagenum))
+		if name == 'tab1':	
+			print "-"
+			print notebook.get_nth_page(pagenum)
+		
 
 	def full_screen(self, widget, event):
 		 if  event.keyval == gtk.keysyms.F11:
@@ -54,7 +38,9 @@ class Console(vte.Terminal,gtk.Notebook):
 	            if event.button == 3:    # 1 sol tus,2 orta tus icin
 			m = gtk.Menu()
 			item1 = gtk.MenuItem("Copy")
+			item1.connect("activate",self.copy)
 			item2 = gtk.MenuItem("Paste")
+			item2.connect("activate",self.paste)
 			item3 = gtk.MenuItem("Close Tab")
 			item4 = gtk.MenuItem("Quit")		
 			item1.show()
@@ -66,7 +52,13 @@ class Console(vte.Terminal,gtk.Notebook):
 			item4.show()
                         m.append(item4)
            		m.popup(None, None, None, event.button, event.time, None)
- 
+	def copy(self, widget=None, data=None):
+		print "*"
+		if terminal.get_has_selection():
+			print "secildi"
+			terminal.copy_clipboard()
+	def paste(self, widget=None, data=None):
+		terminal.paste_clipboard()
 
 if __name__ == '__main__':
 	w = Console()
