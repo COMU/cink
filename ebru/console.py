@@ -3,23 +3,26 @@ import vte
 import os
 
 win = gtk.Window()
-class Console(vte.Terminal,gtk.Window):
+class Console(vte.Terminal):
 
 
 	def __init__(self):	 	
         
 		self.terminal = vte.Terminal()
 	        self.is_fullscreen = False
+		scrolledwindow = gtk.ScrolledWindow()
+		scrolledwindow.set_policy(gtk.POLICY_NEVER,gtk.POLICY_ALWAYS)
 		argv = ['bash']
 		env = self.env_map_to_list(os.environ.copy())
 		cwd = os.environ['HOME']  # eger os.getcwd() deseydik o an calistigi yerin yolunu geri dondururdu
 		self.terminal.fork_command(argv[0], argv, env, cwd)
-		win.resize(100,30)
+		win.resize(400,400)
 		self.terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
 		win.connect('key-press-event',self.full_screen)
 	        self.terminal.connect('event',self.right_click)
-		win.add(self.terminal)
+		win.add(scrolledwindow)
+	        scrolledwindow.add(self.terminal)
                 win.show_all()
 
 	def env_map_to_list(self, env): # terminal fork_command icin
@@ -32,7 +35,7 @@ class Console(vte.Terminal,gtk.Window):
 		
 
 	def full_screen(self, widget, event):
-		 if  event.keyval == gtk.keysyms.F11:
+ 		 if  event.keyval == gtk.keysyms.F11:
 			if self.is_fullscreen == False:
                                 win.fullscreen()
                                 self.is_fullscreen = True
