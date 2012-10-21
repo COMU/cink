@@ -5,11 +5,15 @@ import os
 win = gtk.Window()
 class Console(vte.Terminal,gtk.Window):
 
+
 	def __init__(self):	 	
         
 		self.terminal = vte.Terminal()
 	        self.is_fullscreen = False
-		self.terminal.fork_command()
+		argv = ['bash']
+		env = self.env_map_to_list(os.environ.copy())
+		cwd = os.environ['HOME']  # eger os.getcwd() deseydik o an calistigi yerin yolunu geri dondururdu
+		self.terminal.fork_command(argv[0], argv, env, cwd)
 		win.resize(100,30)
 		self.terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
@@ -17,7 +21,9 @@ class Console(vte.Terminal,gtk.Window):
 	        self.terminal.connect('event',self.right_click)
 		win.add(self.terminal)
                 win.show_all()
-	
+
+	def env_map_to_list(self, env): # terminal fork_command icin
+		return ['%s=%s' % (k, v) for (k, v) in env.items()]
 	def pageSelected(self, notebook, page, pagenum):
 		name = notebook.get_tab_label(notebook.get_nth_page(pagenum))
 		if name == 'tab1':	
