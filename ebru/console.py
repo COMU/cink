@@ -11,12 +11,23 @@ class Console(vte.Terminal,gtk.Notebook,gtk.Window):
 		self.terminal = vte.Terminal()
 	        self.is_fullscreen = False
 		self.terminal.fork_command('bash')	
+		win.resize(1000,3000)
 		self.terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
 		win.connect('key-press-event',self.full_screen)
 	        self.terminal.connect('event',self.right_click)
 		win.add(self.terminal)
                 win.show_all()
+
+	def _create_terminal(self, widget, data=None):
+		print "q"
+
+	def quit_cb(self):
+		print "ss"
+#		keyval = gtk.gdk.keyval_from_name
+		print "a"
+		print "degil"
+
 	
 	def pageSelected(self, notebook, page, pagenum):
 		name = notebook.get_tab_label(notebook.get_nth_page(pagenum))
