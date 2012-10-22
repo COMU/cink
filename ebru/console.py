@@ -8,24 +8,29 @@ class Console(vte.Terminal):
 
 	def __init__(self):	 	
         
-		self.terminal = vte.Terminal()
 	        self.is_fullscreen = False
-		scrolledwindow = gtk.ScrolledWindow()
-		scrolledwindow.set_policy(gtk.POLICY_NEVER,gtk.POLICY_ALWAYS)
-		argv = ['bash']
-		env = self.env_map_to_list(os.environ.copy())
-		cwd = os.environ['HOME']  # eger os.getcwd() deseydik o an calistigi yerin yolunu geri dondururdu
-		self.terminal.fork_command(argv[0], argv, env, cwd)
 		win.resize(400,400)
-		self.terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
 		win.connect('key-press-event',self.full_screen)
+		self.notebook = gtk.Notebook()
+		win.add(self.notebook)
+		for i in range(1,3):
+			vbox = gtk.VBox(False, 0)
+			label = gtk.Label("tab"+str(i))
+               		vbox.pack_start(label)
+	                vbox.show_all()
+			argv = ['bash']
+			env = self.env_map_to_list(os.environ.copy())
+			cwd = os.environ['HOME']
+			self.terminal = vte.Terminal()
+			self.terminal.fork_command(argv[0], argv, env, cwd)
+			self.terminal.set_background_transparent(1)  # set_background_transparent boolean degerler aliyo
+			self.notebook.insert_page(self.terminal,vbox)
+		
 	        self.terminal.connect('event',self.right_click)
-		win.add(scrolledwindow)
-	        scrolledwindow.add(self.terminal)
                 win.show_all()
 
-	def env_map_to_list(self, env): # terminal fork_command icin
+ 	def env_map_to_list(self, env): # terminal fork_command icin
 		return ['%s=%s' % (k, v) for (k, v) in env.items()]
 	def pageSelected(self, notebook, page, pagenum):
 		name = notebook.get_tab_label(notebook.get_nth_page(pagenum))
