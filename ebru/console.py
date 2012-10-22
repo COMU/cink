@@ -31,21 +31,40 @@ class Console(vte.Terminal):
 
 	def create_tab(self):
 		for i in range(1,3):
-                        vbox = gtk.VBox(False, 0)
+                        hbox = gtk.HBox(False, 0)
                         label = gtk.Label("tab"+str(i))
-                        vbox.pack_start(label)
-                        vbox.show_all()
+                        hbox.pack_start(label)
+			# sekmelerde kapatma simgesinin gelmesi icin
+			close_image = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+		        image_w, image_h = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
+			# sekmenin uzerinde sekme kapatma ozelligi olmasi icin 
+			btn = gtk.Button()
+		        btn.set_relief(gtk.RELIEF_NONE)
+		        btn.set_focus_on_click(False)
+		        btn.add(close_image)
+		        hbox.pack_start(btn, False, False)
+			# kapatma butonunun boyutunun ayarlanmasi icin			
+			style = gtk.RcStyle()
+		        style.xthickness = 0
+		        style.ythickness = 0
+		        btn.modify_style(style)			
+
+			hbox.show_all()
+			# sekmenin terminal olusturulmasi
 			self.terminal_action()
-                        self.notebook.insert_page(self.terminal,vbox)
+			# yeni sekme acilmasi
+                        self.notebook.insert_page(self.terminal,hbox)
+			# sekme kapatmak icin fonksiyonun aktif edilmesi
+			btn.connect('clicked', self.on_closetab_button_clicked, self.terminal)
+
+	def on_closetab_button_clicked(self, sender, widget):
+	        # o anki sayfanin numarasinin alinmasi
+        	pagenum = self.notebook.page_num(widget)
+	        # o anki sayfanin kapatilmasi
+        	self.notebook.remove_page(pagenum)
 
  	def env_map_to_list(self, env): # terminal fork_command icin
 		return ['%s=%s' % (k, v) for (k, v) in env.items()]
-
-	def pageSelected(self, notebook, page, pagenum):
-		name = notebook.get_tab_label(notebook.get_nth_page(pagenum))
-		if name == 'tab1':	
-			print "-"
-			print notebook.get_nth_page(pagenum)		
 
 	def full_screen(self, widget, event):
  		 if  event.keyval == gtk.keysyms.F11:
