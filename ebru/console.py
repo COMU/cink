@@ -30,7 +30,7 @@ class Console(vte.Terminal):
 		self.terminal.connect('event',self.right_click)
 
 	def create_tab(self):
-		self.a = 4
+		self.a = 2
 		for i in range(1,self.a):
                         hbox = gtk.HBox(False, 0)
                         label = gtk.Label("tab"+str(i))
