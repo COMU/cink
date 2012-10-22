@@ -30,7 +30,8 @@ class Console(vte.Terminal):
 		self.terminal.connect('event',self.right_click)
 
 	def create_tab(self):
-		for i in range(1,3):
+		self.a = 4
+		for i in range(1,self.a):
                         hbox = gtk.HBox(False, 0)
                         label = gtk.Label("tab"+str(i))
                         hbox.pack_start(label)
@@ -59,9 +60,12 @@ class Console(vte.Terminal):
 
 	def on_closetab_button_clicked(self, sender, widget):
 	        # o anki sayfanin numarasinin alinmasi
+		self.a = self.a-1 # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
         	pagenum = self.notebook.page_num(widget)
-	        # o anki sayfanin kapatilmasi
-        	self.notebook.remove_page(pagenum)
+		if self.a == 1: #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi icin
+			gtk.main_quit()
+		else:
+	        	self.notebook.remove_page(pagenum)
 
  	def env_map_to_list(self, env): # terminal fork_command icin
 		return ['%s=%s' % (k, v) for (k, v) in env.items()]
