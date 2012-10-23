@@ -57,11 +57,11 @@ class Console(vte.Terminal):
 			# yeni sekme acilmasi
                         self.notebook.insert_page(self.terminal,hbox)
 			# sekme kapatmak icin fonksiyonun aktif edilmesi
-			btn.connect('clicked', self.on_closetab_button_clicked, self.terminal)
+			btn.connect('clicked', self.close_tab, self.terminal)
 			win.show_all() # yeni sekme istendiginde bulunuldugunda window kendini guncellesin diye buraya yazildi
 			self.notebook.set_current_page(self.page_-2)  # yeni sekme acildiginda direkt o sekmeye gecsin diye eklendi
 
-	def on_closetab_button_clicked(self, sender, widget):
+	def close_tab(self,widget=None,data=None):
 	        # o anki sayfanin numarasinin alinmasi
 		self.page_ = self.page_-1 # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
         	pagenum = self.notebook.page_num(widget)
@@ -97,6 +97,7 @@ class Console(vte.Terminal):
 			close_tab_item = gtk.MenuItem("Close Tab")
 			close_tab_item.show()
                         m.append(close_tab_item)
+			close_tab_item.connect("activate",self.close_tab)
 			new_tab_item = gtk.MenuItem("New Tab")	
 			new_tab_item.show()
                         m.append(new_tab_item)
