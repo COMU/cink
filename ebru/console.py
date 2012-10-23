@@ -7,14 +7,14 @@ class Console(vte.Terminal):
 
 
 	def __init__(self):	 	
-        
+        	self.page_ = 1
 		win.resize(400,400)
 	        win.connect('delete-event', lambda win, event: gtk.main_quit())
 		win.connect('key-press-event',self.full_screen)
 		self.notebook = gtk.Notebook()
 		win.add(self.notebook)	
-		self.create_tab()
-                win.show_all()
+		self.notebook.set_tab_pos(gtk.POS_BOTTOM)
+		self.create_tab(widget=None,data=None) # sag tiklamayla aktif olsun diye uc tane arg verildi
 
 	def create_terminal(self):
 		self.argv = ['bash']
@@ -22,18 +22,19 @@ class Console(vte.Terminal):
 		self.cwd = os.environ['HOME']
 		self.is_fullscreen = False
 		self.terminal = vte.Terminal()
-		self.terminal.set_background_transparent(1)
+#		self.terminal.set_background_transparent(1)
 
 	def terminal_action(self):
 		self.create_terminal()
                 self.terminal.fork_command(self.argv[0], self.argv, self.env, self.cwd)
 		self.terminal.connect('event',self.right_click)
 
-	def create_tab(self):
-		self.a = 2
-		for i in range(1,self.a):
+	def create_tab(self,widget=None,data=None):
+		self.page_ = self.page_+1
+		for i in range(1,2):
                         hbox = gtk.HBox(False, 0)
-                        label = gtk.Label("tab"+str(i))
+			hbox.set_spacing(1)
+                        label = gtk.Label("tab"+str(self.page_-1))
                         hbox.pack_start(label)
 			# sekmelerde kapatma simgesinin gelmesi icin
 			close_image = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
@@ -57,12 +58,14 @@ class Console(vte.Terminal):
                         self.notebook.insert_page(self.terminal,hbox)
 			# sekme kapatmak icin fonksiyonun aktif edilmesi
 			btn.connect('clicked', self.on_closetab_button_clicked, self.terminal)
+			win.show_all() # yeni sekme istendiginde bulunuldugunda window kendini guncellesin diye buraya yazildi
+			self.notebook.set_current_page(self.page_-2)  # yeni sekme acildiginda direkt o sekmeye gecsin diye eklendi
 
 	def on_closetab_button_clicked(self, sender, widget):
 	        # o anki sayfanin numarasinin alinmasi
-		self.a = self.a-1 # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
+		self.page_ = self.page_-1 # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
         	pagenum = self.notebook.page_num(widget)
-		if self.a == 1: #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi icin
+		if self.page_ == 1: #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi icin
 			gtk.main_quit()
 		else:
 	        	self.notebook.remove_page(pagenum)
@@ -88,8 +91,10 @@ class Console(vte.Terminal):
 			item2 = gtk.MenuItem("Paste")
 			item2.connect("activate",self.paste)
 			item3 = gtk.MenuItem("Close Tab")
-			item4 = gtk.MenuItem("Quit")	
-			item4.connect("activate", lambda discard: gtk.main_quit())
+			item4 = gtk.MenuItem("New Tab")	
+			item5 = gtk.MenuItem("Quit")
+			item4.connect("activate",self.create_tab)
+			item5.connect("activate", lambda discard: gtk.main_quit())
 			item1.show()
 			m.append(item1)
 			item2.show()
@@ -97,7 +102,9 @@ class Console(vte.Terminal):
 			item3.show()
                         m.append(item3)
 			item4.show()
-                        m.append(item4)
+                        m.append(item4)	
+                        item5.show()
+			m.append(item5)
            		m.popup(None, None, None, event.button, event.time, None)
 		
 	def copy(self, widget=None, data=None):
