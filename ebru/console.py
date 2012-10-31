@@ -2,9 +2,10 @@ import gtk
 import vte
 import os
 
+
+
 win = gtk.Window()
 class Console(vte.Terminal):
-
 
 	def __init__(self):	 	
         	self.page_ = 1
@@ -15,6 +16,20 @@ class Console(vte.Terminal):
 		win.add(self.notebook)	
 		self.notebook.set_tab_pos(gtk.POS_BOTTOM)
 		self.create_tab(widget=None,data=None) # sag tiklamayla aktif olsun diye uc tane arg verildi
+#-----------------------------------------------------------------------------------------------------------
+#		accelgroup = gtk.AccelGroup()
+#		win.add_accel_group(accelgroup)
+#		actiongroup = gtk.ActionGroup('ActionExample')
+#		quitaction = gtk.Action('Quit', '_Quit me!', 'Quit the Program',None)
+#		quitaction.set_property('short-label', '_Quit')
+#		quitaction.connect('activate', self.quit_cb)
+#		actiongroup.add_action_with_accel(quitaction, '<Control>k')
+#		quitaction.set_accel_group(accelgroup)
+#		quitaction.connect_accelerator()
+
+	def quit_cb(self, b):
+	        print 'Quitting program'
+	        gtk.main_quit()
 
 	def create_terminal(self):
 		self.argv = ['bash']
@@ -22,8 +37,8 @@ class Console(vte.Terminal):
 		self.cwd = os.environ['HOME']
 		self.is_fullscreen = False
 		self.terminal = vte.Terminal()
-#		self.terminal.set_background_transparent(1)
-
+		self.terminal.set_background_transparent(1)
+ 
 	def terminal_action(self):
 		self.create_terminal()
                 self.terminal.fork_command(self.argv[0], self.argv, self.env, self.cwd)
@@ -32,10 +47,13 @@ class Console(vte.Terminal):
 	def create_tab(self,widget=None,data=None):
 		self.page_ = self.page_+1
 		for i in range(1,2):
-                        hbox = gtk.HBox(False, 0)
-			hbox.set_spacing(1)
-                        label = gtk.Label("tab"+str(self.page_-1))
-                        hbox.pack_start(label)
+                        self.hbox = gtk.HBox(False, 0)
+			self.hbox.set_spacing(1)
+#			self.entry = gtk.Entry()
+#			self.hbox.pack_start(self.entry)
+			
+                        self.label = gtk.Label("tab"+str(self.page_-1))
+                        self.hbox.pack_start(self.label)
 			# sekmelerde kapatma simgesinin gelmesi icin
 			close_image = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
 		        image_w, image_h = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
@@ -44,18 +62,18 @@ class Console(vte.Terminal):
 		        btn.set_relief(gtk.RELIEF_NONE)
 		        btn.set_focus_on_click(False)
 		        btn.add(close_image)
-		        hbox.pack_start(btn, False, False)
+		        self.hbox.pack_start(btn, False, False)
 			# kapatma butonunun boyutunun ayarlanmasi icin			
 			style = gtk.RcStyle()
 		        style.xthickness = 0
 		        style.ythickness = 0
 		        btn.modify_style(style)			
 
-			hbox.show_all()
+			self.hbox.show_all()
 			# sekmenin terminal olusturulmasi
 			self.terminal_action()
 			# yeni sekme acilmasi
-                        self.notebook.insert_page(self.terminal,hbox)
+                        self.notebook.insert_page(self.terminal,self.hbox)
 			# sekme kapatmak icin fonksiyonun aktif edilmesi
 			btn.connect('clicked', self.close_tab, self.terminal)
 			win.show_all() # yeni sekme istendiginde bulunuldugunda window kendini guncellesin diye buraya yazildi
@@ -102,11 +120,31 @@ class Console(vte.Terminal):
 			new_tab_item.show()
                         m.append(new_tab_item)
 			new_tab_item.connect("activate",self.create_tab)
+			rename_item = gtk.MenuItem("Oturumu Yeniden Adlandir")
+                        rename_item.show()
+			rename_item.connect("activate",self.tab_rename) 
+                        m.append(rename_item)
 			quit_item = gtk.MenuItem("Quit")
 			quit_item.connect("activate", lambda discard: gtk.main_quit())	
                         quit_item.show()
 			m.append(quit_item)
-           		m.popup(None, None, None, event.button, event.time, None)
+          		m.popup(None, None, None, event.button, event.time, None)
+
+	def tab_rename(self,widget=None,data=None):
+		self.entry = gtk.Entry()        
+		self.hbox.remove(self.label)        
+                self.hbox.pack_start(self.entry)	
+		self.hbox.show_all()
+		self.entry.connect('key-press-event', self.enter_key)		
+		
+	def enter_key(self, widget, event):
+		self.str_ = self.entry.get_text()
+		if event.keyval == 65293:
+			self.label.set_text(self.str_)
+			self.hbox.remove(self.entry)
+			self.hbox.pack_start(self.label)
+			self.hbox.show_all()
+
 		
 	def copy(self, widget=None, data=None):
 		if self.terminal.get_has_selection():
@@ -118,4 +156,6 @@ class Console(vte.Terminal):
 if __name__ == '__main__':
 	w = Console()
 	gtk.main()
+
+
 
