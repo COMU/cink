@@ -30,15 +30,13 @@ class Console():
             close_image = gtk.Image()
             close_image.set_from_file("close_button.png")
             close_image.show()
-
             # sekmenin uzerinde sekme kapatma ozelligi olmasi icin 
             btn = gtk.Button()
             btn.set_size_request(30,30)
             btn.set_relief(gtk.RELIEF_NONE)
             btn.set_focus_on_click(False)
             btn.add(close_image)
-
-            self.hbox[self.index_].pack_start(btn, False, False)
+            self.hbox[self.index_].pack_end(btn, False, False)
             # kapatma butonunun boyutunun ayarlanmasi icin
             style = gtk.RcStyle()
             style.xthickness = 0
@@ -50,7 +48,7 @@ class Console():
             # yeni sekme acilmasi
             self.notebook.insert_page(self.terminal,self.hbox[self.index_])
             # sekme kapatmak icin fonksiyonun aktif edilmesi
-#            btn.connect('clicked', self.close_tab)
+            btn.connect('clicked', self.close_tab)
             win.show_all() # yeni sekme istendiginde bulunuldugunda window kendini guncellesin diye buraya yazildi
             self.notebook.set_current_page(self.page_-2)  # yeni sekme acildiginda direkt o sekmeye gecsin diye eklendi
 
