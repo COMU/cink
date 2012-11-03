@@ -20,6 +20,8 @@ class Console():
     def create_tab(self,widget=None,data=None):
         self.page_ = self.page_+1
         self.index_ = self.page_-2
+        self.notebook.set_scrollable(True)
+        self.notebook.popup_disable()
         for i in range(1,2):
             self.hbox.append(gtk.HBox(False, 0))
             self.hbox[self.index_].set_spacing(1)
@@ -47,7 +49,7 @@ class Console():
             # yeni sekme acilmasi
             self.notebook.insert_page(self.terminal,self.hbox[self.index_])
             # sekme kapatmak icin fonksiyonun aktif edilmesi
-            btn.connect('clicked', self.close_tab, self.terminal)
+            btn.connect('clicked', self.close_tab)
             win.show_all() # yeni sekme istendiginde bulunuldugunda window kendini guncellesin diye buraya yazildi
             self.notebook.set_current_page(self.page_-2)  # yeni sekme acildiginda direkt o sekmeye gecsin diye eklendi
 
@@ -67,6 +69,7 @@ class Console():
     def close_tab(self,widget=None,data=None):
         # o anki sayfanin numarasinin alinmasi
         self.page_ = self.page_-1 # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
+        print self.page_
         pagenum = self.notebook.get_current_page()
         if self.page_ == 1: #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi icin
             gtk.main_quit()
