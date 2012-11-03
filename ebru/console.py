@@ -26,8 +26,10 @@ class Console():
             self.label.append(gtk.Label("tab"+str(self.page_-1)))  # daha sonra label degerleri degsitirlebilsin diye diziye atildi
             self.hbox[self.index_].pack_start(self.label[self.index_])
             # sekmelerde kapatma simgesinin gelmesi icin
-            close_image = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
-            image_w, image_h = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
+            close_image = gtk.Image()
+            close_image.set_from_file("close_button.png")
+            close_image.show()
+
             # sekmenin uzerinde sekme kapatma ozelligi olmasi icin 
             btn = gtk.Button()
             btn.set_relief(gtk.RELIEF_NONE)
@@ -65,7 +67,7 @@ class Console():
     def close_tab(self,widget=None,data=None):
         # o anki sayfanin numarasinin alinmasi
         self.page_ = self.page_-1 # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
-        pagenum = self.notebook.page_num(widget)
+        pagenum = self.notebook.get_current_page()
         if self.page_ == 1: #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi icin
             gtk.main_quit()
         else:
@@ -136,6 +138,8 @@ class Console():
 
 
     def copy(self, widget=None, data=None):
+        pagenum = self.notebook.get_current_page()
+        print pagenum 
         if self.terminal.get_has_selection():
             self.terminal.copy_clipboard()
 
