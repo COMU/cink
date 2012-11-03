@@ -117,6 +117,7 @@ class Console():
         pagenum = self.notebook.get_current_page()
         self.entry = gtk.Entry()
         self.hbox[pagenum].remove(self.label[pagenum])        
+        self.entry.set_text(self.label[pagenum].get_text())
         self.hbox[pagenum].pack_start(self.entry)	
         self.hbox[pagenum].show_all()
         self.entry.connect('key-press-event', self.enter_key)		
@@ -125,7 +126,10 @@ class Console():
         pagenum = self.notebook.get_current_page()
         self.str_ = self.entry.get_text()
         if event.keyval == 65293:
-            self.label[pagenum].set_text(self.str_)
+            if self.str_ == "":
+                self.label[pagenum].set_text(self.label[pagenum].get_text())  # eger kullanici string girmezse eski tab adi alinir.
+            else:
+                self.label[pagenum].set_text(self.str_)
             self.hbox[pagenum].remove(self.entry)
             self.hbox[pagenum].pack_start(self.label[pagenum])
             self.hbox[pagenum].show_all()
