@@ -21,7 +21,6 @@ class Console():
         self.page_ = self.page_+1
         self.index_ = self.page_-2
         self.notebook.set_scrollable(True)
-        self.notebook.popup_disable()
         for i in range(1,2):
             self.hbox.append(gtk.HBox(False, 0))
             self.hbox[self.index_].set_spacing(1)
@@ -34,9 +33,11 @@ class Console():
 
             # sekmenin uzerinde sekme kapatma ozelligi olmasi icin 
             btn = gtk.Button()
+            btn.set_size_request(30,30)
             btn.set_relief(gtk.RELIEF_NONE)
             btn.set_focus_on_click(False)
             btn.add(close_image)
+
             self.hbox[self.index_].pack_start(btn, False, False)
             # kapatma butonunun boyutunun ayarlanmasi icin
             style = gtk.RcStyle()
@@ -49,7 +50,7 @@ class Console():
             # yeni sekme acilmasi
             self.notebook.insert_page(self.terminal,self.hbox[self.index_])
             # sekme kapatmak icin fonksiyonun aktif edilmesi
-            btn.connect('clicked', self.close_tab)
+#            btn.connect('clicked', self.close_tab)
             win.show_all() # yeni sekme istendiginde bulunuldugunda window kendini guncellesin diye buraya yazildi
             self.notebook.set_current_page(self.page_-2)  # yeni sekme acildiginda direkt o sekmeye gecsin diye eklendi
 
