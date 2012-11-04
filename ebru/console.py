@@ -7,20 +7,44 @@ win = gtk.Window()
 class Console():
     def __init__(self):
         self.page_ = 1
+        self.label = []  
+        self.hbox = []
         win.resize(400,400)
         win.connect('delete-event', lambda win, event: gtk.main_quit())
         self.notebook = gtk.Notebook()
         win.add(self.notebook)	
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)
-        accelgroup =  gtk.AccelGroup()
-        key, mod = gtk.accelerator_parse("F11")
-        accelgroup.connect_group(key,mod,gtk.ACCEL_MASK,self.full_screen)
-        win.add_accel_group(accelgroup)
+        self.shortcut()
         self.create_tab(widget=None,data=None) #sag tiklamayla aktif olsun diye uc tane arg verildi
 
+
+    def shortcut(self):
+        accelgroup = []
+        accelgroup.append(gtk.AccelGroup())
+        # full screen
+        key1, mod1 = gtk.accelerator_parse("F11")
+        accelgroup[0].connect_group(key1,mod1,gtk.ACCEL_MASK,self.full_screen)
+        # new tab
+        key2, mod2= gtk.accelerator_parse("<Control><Shift>N") 
+        accelgroup.append(gtk.AccelGroup())
+        accelgroup[1].connect_group(key2,mod2,gtk.ACCEL_MASK,self.create_tab_)
+        # close tab
+        accelgroup.append(gtk.AccelGroup())
+        key3, mod3= gtk.accelerator_parse("<Control><Shift>W") 
+        accelgroup[2].connect_group(key3,mod3,gtk.ACCEL_MASK,self.close_tab_)
+        # add accel
+        win.add_accel_group(accelgroup[0])
+        win.add_accel_group(accelgroup[1])
+        win.add_accel_group(accelgroup[2])
+        
+
+    def create_tab_(self,accelgroup,win,key,mod):
+        self.create_tab()
+    
+    def close_tab_(self,accelgroup,win,key,mod):
+        self.close_tab()
+
     def create_tab(self,widget=None,data=None):
-        self.hbox = []
-        self.label = []
         self.page_ = self.page_+1
         self.index_ = self.page_-2
         self.notebook.set_scrollable(True)
@@ -51,6 +75,7 @@ class Console():
         self.notebook.insert_page(self.terminal,self.hbox[self.index_])
             # sekme kapatmak icin fonksiyonun aktif edilmesi
         btn.connect('clicked', self.close_tab)
+
         win.show_all() # yeni sekme istendiginde bulunuldugunda window kendini guncellesin diye buraya yazildi
         self.notebook.set_current_page(self.page_-2)  # yeni sekme acildiginda direkt o sekmeye gecsin diye eklendi
 
@@ -97,10 +122,11 @@ class Console():
                 m.append(copy_item)
                 copy_item.connect("activate",self.copy)
                 paste_item = gtk.MenuItem("Paste")
+                paste_item = gtk.MenuItem("Paste")
                 paste_item.show()
                 m.append(paste_item)
                 paste_item.connect("activate",self.paste)
-                close_tab_item = gtk.MenuItem("Close Tab","<Control>k")
+                close_tab_item = gtk.MenuItem("Close Tab")
                 close_tab_item.show()
                 m.append(close_tab_item)
                 close_tab_item.connect("activate",self.close_tab)
