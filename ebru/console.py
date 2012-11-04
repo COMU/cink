@@ -72,7 +72,22 @@ class Console():
             # sekmenin terminal olusturulmasi
         self.terminal_action()
             # yeni sekme acilmasi
+
+#        vpane = gtk.VPaned()
+ #       hbox1 = gtk.HBox()
+  #      hbox2 = gtk.HBox()
+   #     hbox1.pack_start(self.terminal)
+    #    hbox2.pack_start(self.terminal)
+
+#        vpane.add1(hbox1)
+
+#        vpane.add2(hbox2)
+
         self.notebook.insert_page(self.terminal,self.hbox[self.index_])
+
+
+
+#        self.notebook.insert_page(self.terminal,self.hbox[self.index_])
             # sekme kapatmak icin fonksiyonun aktif edilmesi
         btn.connect('clicked', self.close_tab)
 
@@ -85,7 +100,8 @@ class Console():
         self.cwd = os.environ['HOME']
         self.is_fullscreen = False
         self.terminal = vte.Terminal()
-        self.terminal.set_background_transparent(1)
+        self.terminal.set_colors(gtk.gdk.color_parse('white'),gtk.gdk.color_parse('pink'),[])
+#        self.terminal.set_background_transparent(1)
 
     def terminal_action(self):
         self.create_terminal()
