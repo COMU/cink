@@ -69,25 +69,15 @@ class Console():
         style.ythickness = 0
         btn.modify_style(style)
         self.hbox[self.index_].show_all()
-            # sekmenin terminal olusturulmasi
-        self.terminal_action()
-            # yeni sekme acilmasi
-
-#        vpane = gtk.VPaned()
- #       hbox1 = gtk.HBox()
-  #      hbox2 = gtk.HBox()
-   #     hbox1.pack_start(self.terminal)
-    #    hbox2.pack_start(self.terminal)
-
-#        vpane.add1(hbox1)
-
-#        vpane.add2(hbox2)
-
-        self.notebook.insert_page(self.terminal,self.hbox[self.index_])
-
-
-
-#        self.notebook.insert_page(self.terminal,self.hbox[self.index_])
+        # terminalin bolunmesi
+        vpane = gtk.VPaned()
+        term1 = self.terminal_action()
+        vpane.add1(term1)
+        
+        term2 = self.terminal_action()
+        vpane.add2(term2)        
+        self.notebook.insert_page(vpane,self.hbox[self.index_])
+        
             # sekme kapatmak icin fonksiyonun aktif edilmesi
         btn.connect('clicked', self.close_tab)
 
@@ -107,11 +97,11 @@ class Console():
         self.create_terminal()
         self.terminal.fork_command(self.argv[0], self.argv, self.env, self.cwd)
         self.terminal.connect('event',self.right_click)
+        return self.terminal
 
     def close_tab(self,widget=None,data=None):
         # o anki sayfanin numarasinin alinmasi
         self.page_ = self.page_-1 # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
-        print self.page_
         pagenum = self.notebook.get_current_page()
         if self.page_ == 1: #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi icin
             gtk.main_quit()
