@@ -52,9 +52,7 @@ class Utils():
         # her sayfa kapatildiginda toplam sekme sayisi bir azaltilir bu sekilde
         self.page_ -=1
         pagenum = self.notebook.get_current_page()
-        print "close_tab",self.page_
-        print "kaldirilan", pagenum
-         #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi
+        #acik tek bir sekme kaldiysa ve kapatiliyorsa pencerenin de kapatilmasi
         if self.page_ == 0:
             gtk.main_quit()
         # degilse sadece tabin kapatilmasi icin
@@ -80,9 +78,29 @@ class Utils():
             # kullanici string girmwzse eski adi alir
             if self.str_ == "":
                 self.label[pagenum].set_text(self.label[pagenum].get_text())
+
             else:
                 self.label[pagenum].set_text(self.str_)
             self.hbox[pagenum].remove(self.entry)
             self.hbox[pagenum].pack_start(self.label[pagenum])
             self.hbox[pagenum].show_all()
- 
+
+    def tab_name_no(self):
+        if len(self.label)==0:
+            print "tek eleman var"
+            self.label.append(gtk.Label("tab1"))
+            return
+        tab_name = ""
+        self.name_list = []
+#tum isimleri kontrol icin bir listeye gonderir
+        for j in range(0,len(self.label)):
+            self.name_list.append(self.label[j].get_text())
+        for i in range(0,len(self.label)):
+            name = tab_name.join("tab"+str(i+1))
+            if not name in self.name_list:
+                self.label.append(gtk.Label(name))
+                return
+        self.label.append(gtk.Label("tab"+str(i+2)))
+        return
+
+
