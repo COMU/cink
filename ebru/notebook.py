@@ -14,10 +14,14 @@ class Console(Utils):
         self.create_tab(widget=None,data=None) 
     
     def variable(self):
-        # bu degiskeni sadece ilk sayfa kapatildiginda baska sayfalarda varsa pencereyi tamamen kapatilmasin diye
+#bu degiskeni sadece ilk sayfa kapatildiginda baska sayfalarda varsa pencereyi tamamen kapatilmasin diye
         self.page_ = 0
+        self.hpane = []
+        self.term_indx = -1
+        self.hbox_ = gtk.HBox()
         self.label = [] # tab isimleri
         self.hbox = [] # acilan her tabin hboxi
+        self.hbox_ = []
         self.terminal = []
         """ etiket ve sekme indexleri dizide tutuldugu icin her sekme
         acilip kapandiginda dizi indexinde problem olmasin diye"""
@@ -25,7 +29,9 @@ class Console(Utils):
     # temel notebook icin yuklenilmesi gerekenler
     def base_setting(self):
         self.variable()
-        win.resize(400,400)
+#        win.resize(400,400)
+#        win.set_default_size(250, 100)
+#        win.set_size_request(750, 750)
         self.notebook = gtk.Notebook()
         # cok fazla sekme acilinca kaydirma cubugu
         self.notebook.set_scrollable(True) 
@@ -54,12 +60,11 @@ class Console(Utils):
         self.page_ += 1 
         self.index_ = len(self.hbox)
         self.hbox.append(gtk.HBox(False, 0))
+        self.hbox_.append(gtk.HBox(False,0))
         self.hbox[self.index_].set_spacing(1)
         # kullanici labelleri degistirebilsin diye diziye atildi
         self.tab_name_no()
-
-        #self.label.append(gtk.Label("tab"+str(self.index_+1)))  
-        self.hbox[self.index_].pack_start(self.label[self.index_])
+        self.hbox[self.index_].pack_end(self.label[self.index_])
         # sekmelerde kapatma simgesinin gelmesi icin
         close_image = gtk.Image()
         close_image.set_from_file("close_button.png")
@@ -78,30 +83,75 @@ class Console(Utils):
         btn.modify_style(style)
         self.hbox[self.index_].show_all()
         # yeni terminal olusturulmasi
-        self.terminal_setting()
-        self.terminal_action()
-        self.notebook.insert_page(self.terminal[self.index_],self.hbox[self.index_])
-         # sekme kapatmak icin fonksiyonun aktif edilmesi
-#        btn.connect('clicked', self.close_tab)
+        self.terminal_hpane()
+        self.notebook.insert_page(self.hbox_[self.index_],self.hbox[self.index_])
         # yeni sekme acildiginda gostermesi icin
         win.show_all() 
         # yeni sekme acildiginda direkt o sekmeye gecsin diye
         self.notebook.set_current_page(self.page_-1)
+
+    def terminal_hpane(self):
+
+        self.terminal.append(vte.Terminal())
+        self.term_indx +=1
+        self.terminal_setting()
+        self.term1 = self.terminal_action()
+        self.hpane.append(gtk.HPaned())    
+        
+        self.hpane[0].add1(self.term1)
+        self.hpane[0].pack1(self.term1,True,True)
+
+        self.terminal.append(vte.Terminal())
+        self.term_indx +=1
+        self.terminal_setting()
+        self.term2 = self.terminal_action()
+#        self.hpane[0].set_position(150)
+        self.hpane[0].add2(self.term2) 
+        self.hpane[0].pack2(self.term2,True,True)
+        self.hpane[0].set_usize(350,350)
+        self.hbox_[self.index_].pack_start(self.hpane[0])
+
+
+
+    def terminal_pane2(self,widget=None,data=None):
+        self.terminal.append(vte.Terminal())
+        self.term_indx += 1
+        self.terminal_setting()
+        self.term3 = self.terminal_action()
+        self.hpane.append(gtk.HPaned())
+        self.hpane[1].add1(self.term3)
+        self.hbox_[self.index_].pack_end(self.hpane[1])
+        self.hbox_[self.index_].show_all()
+
+    def terminal_vpane(self,widget=None,data=None):
+        self.vpane = []
+        self.terminal.append(vte.Terminal())
+        self.term_indx += 1
+        self.terminal_setting()
+        self.term4 = self.terminal_action()
+        self.vpane.append(gtk.VPaned())
+
+        self.hpane[0].remove(self.term1)
+        self.vpane[0].add1(self.term1)
+        self.vpane[0].pack1(self.term1)
+        self.vpane[0].add2(self.term4)
+        self.vpane[0].pack2(self.term4)
+        
+        self.hbox_[self.index_].pack_end(self.vpane[0])
+        self.hbox_[self.index_].show_all()
+
 
     def terminal_setting(self):
         self.argv = ['bash']
         self.env = self.env_map_to_list(os.environ.copy())
         self.cwd = os.environ['HOME']
         self.is_fullscreen = False
-        self.terminal.append(vte.Terminal())
-        # self.index_ sekme sayfasiyla ayni
-        self.terminal[self.index_].set_colors(gtk.gdk.color_parse('white'),gtk.gdk.color_parse('pink'),[])
-        #self.terminal.set_background_transparent(1)
+        self.terminal[self.term_indx].set_colors(gtk.gdk.color_parse('white'),gtk.gdk.color_parse('pink'),[])
 
     def terminal_action(self):
-        self.terminal[self.index_].fork_command(self.argv[0], self.argv, self.env, self.cwd)
-        self.terminal[self.index_].connect('event',self.right_click)
-        return self.terminal[self.index_]
+        self.terminal[self.term_indx].fork_command(self.argv[0], self.argv, self.env, self.cwd)
+        self.terminal[self.term_indx].connect('event',self.right_click)
+        return self.terminal[self.term_indx]
 
     def env_map_to_list(self, env): # terminal fork_command icin
         return ['%s=%s' % (k, v) for (k, v) in env.items()]

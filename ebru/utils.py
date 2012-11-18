@@ -34,6 +34,17 @@ class Utils():
                 rename_item.show()
                 rename_item.connect("activate",self.tab_rename) 
                 m.append(rename_item)
+
+                tab_hpane = gtk.MenuItem("Ekrani Dikey Bol")
+                tab_hpane.show()
+                tab_hpane.connect("activate",self.terminal_pane2)
+                m.append(tab_hpane)
+
+                tab_vpane = gtk.MenuItem("Ekrani Yatay Bol")
+                tab_vpane.show()
+                tab_vpane.connect("activate",self.terminal_vpane)
+                m.append(tab_vpane)
+
                 quit_item = gtk.MenuItem("Quit")
                 quit_item.connect("activate", lambda discard: gtk.main_quit())  
                 quit_item.show()
