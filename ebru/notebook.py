@@ -1,6 +1,7 @@
 import gtk 
 import vte
 import os
+import gobject
 from utils import Utils
 
 win = gtk.Window()
@@ -24,15 +25,12 @@ class Console(Utils):
         self.index_ = -1
     # temel notebook icin yuklenilmesi gerekenler
     def base_setting(self):
-        self.variable()
-        win.resize(400,400)
+        self.variable()	
+	win.set_resizable(True)
 	win.set_decorated(False)
         self.notebook = gtk.Notebook()
-	win.set_position(gtk.WIN_POS_CENTER)
-	loc_coord = win.get_position()
-        loc_coord=list(loc_coord)
-        win.move(loc_coord[0],0);
-#	win.move(0,0)
+	width, height = win.get_size()
+	win.move((gtk.gdk.screen_width()-width)/2-150, 0)	
         # cok fazla sekme acilinca kaydirma cubugu
         self.notebook.set_scrollable(True) 
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)
@@ -87,13 +85,18 @@ class Console(Utils):
         self.terminal_setting()
         self.terminal_action()
         self.notebook.insert_page(self.terminal[self.index_],self.hbox[self.index_])
-         # sekme kapatmak icin fonksiyonun aktif edilmesi
-#        btn.connect('clicked', self.close_tab)
-        # yeni sekme acildiginda gostermesi icin
-        win.show_all() 
-        # yeni sekme acildiginda direkt o sekmeye gecsin diye
         self.notebook.set_current_page(self.page_-1)
+	i=1	
+	win.set_default_size(0,0)
 
+    def terminalSize(self):
+	for i in range(1,gtk.gdk.screen_height()):
+                win.resize(300,i)
+		print win.get_size()
+		print i
+		i+=1
+                win.show_all()
+			
     def terminal_setting(self):
         self.argv = ['bash']
         self.env = self.env_map_to_list(os.environ.copy())
@@ -118,12 +121,13 @@ class Console(Utils):
             self.is_fullscreen = True
         elif self.is_fullscreen == True:
             win.unfullscreen()
-            win.resize(400,400)
+	    win.resize(400,400)
+	    print win.get_size()
             self.is_fullscreen = False
 
 
 
 if __name__ == '__main__':
     w = Console()
+    gobject.idle_add(w.terminalSize)
     gtk.main()
-
