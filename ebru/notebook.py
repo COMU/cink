@@ -26,6 +26,7 @@ class Console(Utils):
     def base_setting(self):
         self.variable()
         win.resize(400,400)
+	win.set_decorated(False)
         self.notebook = gtk.Notebook()
         # cok fazla sekme acilinca kaydirma cubugu
         self.notebook.set_scrollable(True) 

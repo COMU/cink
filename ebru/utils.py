@@ -65,8 +65,13 @@ class Utils():
     def tab_rename(self,widget=None,data=None):
         pagenum = self.notebook.get_current_page()
         self.entry = gtk.Entry()
+	self.entry.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray"))
+	self.entry.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("blue"))
+	self.entry.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
+	self.entry.set_width_chars(len(self.label[pagenum].get_text()))
         self.hbox[pagenum].remove(self.label[pagenum])        
         self.entry.set_text(self.label[pagenum].get_text())
+	self.entry.select_region(0, len(self.entry.get_text()))
         self.hbox[pagenum].pack_start(self.entry)       
         self.hbox[pagenum].show_all()
         self.entry.connect('key-press-event', self.enter_key)   
@@ -87,7 +92,6 @@ class Utils():
 
     def tab_name_no(self):
         if len(self.label)==0:
-            print "tek eleman var"
             self.label.append(gtk.Label("tab1"))
             return
         tab_name = ""
