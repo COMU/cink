@@ -28,6 +28,11 @@ class Console(Utils):
         win.resize(400,400)
 	win.set_decorated(False)
         self.notebook = gtk.Notebook()
+	win.set_position(gtk.WIN_POS_CENTER)
+	loc_coord = win.get_position()
+        loc_coord=list(loc_coord)
+        win.move(loc_coord[0],0);
+#	win.move(0,0)
         # cok fazla sekme acilinca kaydirma cubugu
         self.notebook.set_scrollable(True) 
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)

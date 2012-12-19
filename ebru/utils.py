@@ -80,7 +80,7 @@ class Utils():
         pagenum = self.notebook.get_current_page()
         self.str_ = self.entry.get_text()
         if event.keyval == 65293:
-            # kullanici string girmwzse eski adi alir
+            # kullanici string girmezse eski adi alir
             if self.str_ == "":
                 self.label[pagenum].set_text(self.label[pagenum].get_text())
 
