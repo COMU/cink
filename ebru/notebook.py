@@ -2,6 +2,7 @@ import gtk
 import vte
 import os
 import gobject
+import time
 from utils import Utils
 
 win = gtk.Window()
@@ -29,8 +30,6 @@ class Console(Utils):
 	win.set_resizable(True)
 	win.set_decorated(False)
         self.notebook = gtk.Notebook()
-	width, height = win.get_size()
-	win.move((gtk.gdk.screen_width()-width)/2-150, 0)	
         # cok fazla sekme acilinca kaydirma cubugu
         self.notebook.set_scrollable(True) 
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)
@@ -86,17 +85,16 @@ class Console(Utils):
         self.terminal_action()
         self.notebook.insert_page(self.terminal[self.index_],self.hbox[self.index_])
         self.notebook.set_current_page(self.page_-1)
-	i=1	
-	win.set_default_size(0,0)
+	self.expand()
 
-    def terminalSize(self):
-	for i in range(1,gtk.gdk.screen_height()):
-                win.resize(300,i)
-		print win.get_size()
-		print i
-		i+=1
-                win.show_all()
-			
+    def expand(self):
+	for i in range(2,400):
+            win.set_size_request(gtk.gdk.screen_width(),i)
+            win.show_all()
+            while gtk.events_pending():
+                gtk.main_iteration(block=False)
+            time.sleep(0.01)
+    
     def terminal_setting(self):
         self.argv = ['bash']
         self.env = self.env_map_to_list(os.environ.copy())
@@ -122,12 +120,12 @@ class Console(Utils):
         elif self.is_fullscreen == True:
             win.unfullscreen()
 	    win.resize(400,400)
-	    print win.get_size()
             self.is_fullscreen = False
 
-
-
-if __name__ == '__main__':
-    w = Console()
-    gobject.idle_add(w.terminalSize)
+def main():
+    app = Console()
     gtk.main()
+
+if __name__ == "__main__":
+    main()
+
