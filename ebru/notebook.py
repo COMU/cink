@@ -90,10 +90,18 @@ class Console(Utils):
 	#sadece terminal ilk acildiginda kayarak ilerleme yapmasi
 	if self.is_first == 0:
 		self.is_first =1
-		self.win.set_size_request(500,50)
-		self.win.move((gtk.gdk.screen_width()-500)/2,0)
 		o = Expand()
-		o.expand_down(self.win)
+		direction = "left"
+		if direction== "down":
+			self.win.set_size_request(500,50)
+			self.win.move((gtk.gdk.screen_width()-500)/2,0)
+			o.expand_down(self.win)
+		elif direction == "right":
+			self.win.move(0,0)
+			o.expand_right(self.win)
+		elif direction == "left":
+			self.win.move(gtk.gdk.screen_width(),0)
+			o.expand_left(self.win)
 	self.win.show_all()
     
     def terminal_setting(self):
@@ -131,7 +139,20 @@ class Expand():
 			while gtk.events_pending():
 		        	gtk.main_iteration(block=False)
 	                time.sleep(0.01)
-
+	def expand_right(self,win):
+		for i in range(50,500):
+			win.set_size_request(i,400)
+			win.show_all()
+			while gtk.events_pending():
+                        	gtk.main_iteration(block=False)
+                        time.sleep(0.01)
+	def expand_left(self,win):
+		for i in range(50,500):
+                        win.set_size_request(i,400)
+                        win.show_all()
+                        while gtk.events_pending():
+                                gtk.main_iteration(block=False)
+                        time.sleep(0.01)		
 def main():
     app = Console()
     gtk.main()
