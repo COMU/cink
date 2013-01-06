@@ -5,6 +5,7 @@ import vte
 class Utils():
 
     def create_tab_(self,accelgroup,win,key,mod):
+	print "create"
         self.create_tab()
     
     def close_tab_(self,accelgroup,win,key,mod):

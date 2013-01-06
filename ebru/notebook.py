@@ -5,19 +5,21 @@ import gobject
 import time
 from utils import Utils
 
-win = gtk.Window()
+#win = gtk.Window()
 class Console(Utils):
     def __init__(self):
-        win.connect('delete-event', lambda win, event: gtk.main_quit())
+	self.win = gtk.Window()
+        self.win.connect('delete-event', lambda win, event: gtk.main_quit())
         self.base_setting()
         self.shortcut()
-        win.add(self.notebook)  
+        self.win.add(self.notebook)  
         # sag tiklama icin uc arg verildi
         self.create_tab(widget=None,data=None) 
     
     def variable(self):
         # bu degiskeni sadece ilk sayfa kapatildiginda baska sayfalarda varsa pencereyi tamamen kapatilmasin diye
         self.page_ = 0
+	self.is_first=0 #pencerenin ilk acilma bilgisi
         self.label = [] # tab isimleri
         self.hbox = [] # acilan her tabin hboxi
         self.terminal = []
@@ -27,8 +29,8 @@ class Console(Utils):
     # temel notebook icin yuklenilmesi gerekenler
     def base_setting(self):
         self.variable()	
-	win.set_resizable(True)
-	win.set_decorated(False)
+	self.win.set_resizable(True)
+	self.win.set_decorated(False)
         self.notebook = gtk.Notebook()
         # cok fazla sekme acilinca kaydirma cubugu
         self.notebook.set_scrollable(True) 
@@ -49,9 +51,9 @@ class Console(Utils):
         key3, mod3= gtk.accelerator_parse("<Control><Shift>W") 
         accelgroup[2].connect_group(key3,mod3,gtk.ACCEL_MASK,self.close_tab_)
         # add accel
-        win.add_accel_group(accelgroup[0])
-        win.add_accel_group(accelgroup[1])
-        win.add_accel_group(accelgroup[2]) 
+        self.win.add_accel_group(accelgroup[0])
+        self.win.add_accel_group(accelgroup[1])
+        self.win.add_accel_group(accelgroup[2]) 
 
     def create_tab(self,widget=None,data=None):
         self.page_ += 1 
@@ -85,15 +87,14 @@ class Console(Utils):
         self.terminal_action()
         self.notebook.insert_page(self.terminal[self.index_],self.hbox[self.index_])
         self.notebook.set_current_page(self.page_-1)
-	self.expand()
-
-    def expand(self):
-	for i in range(2,400):
-            win.set_size_request(gtk.gdk.screen_width(),i)
-            win.show_all()
-            while gtk.events_pending():
-                gtk.main_iteration(block=False)
-            time.sleep(0.01)
+	#sadece terminal ilk acildiginda kayarak ilerleme yapmasi
+	if self.is_first == 0:
+		self.is_first =1
+		self.win.set_size_request(500,50)
+		self.win.move((gtk.gdk.screen_width()-500)/2,0)
+		o = Expand()
+		o.expand_down(self.win)
+	self.win.show_all()
     
     def terminal_setting(self):
         self.argv = ['bash']
@@ -115,12 +116,21 @@ class Console(Utils):
 
     def full_screen(self,accelgroup,win,key,mod):
         if self.is_fullscreen == False:
-            win.fullscreen()
+            self.win.fullscreen()
             self.is_fullscreen = True
         elif self.is_fullscreen == True:
-            win.unfullscreen()
-	    win.resize(400,400)
+            self.win.unfullscreen()
+	    self.win.resize(400,400)
             self.is_fullscreen = False
+
+class Expand():
+	def expand_down(self,win):
+		for i in range(50,400):
+			win.set_size_request(500,i)
+			win.show_all()
+			while gtk.events_pending():
+		        	gtk.main_iteration(block=False)
+	                time.sleep(0.01)
 
 def main():
     app = Console()
