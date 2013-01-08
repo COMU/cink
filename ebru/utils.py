@@ -4,8 +4,10 @@ import vte
 
 class Utils():
 
+    def start_term(self,accelgroup,win,key,mod):
+	print "**"
+	
     def create_tab_(self,accelgroup,win,key,mod):
-	print "create"
         self.create_tab()
     
     def close_tab_(self,accelgroup,win,key,mod):
@@ -34,7 +36,11 @@ class Utils():
                 rename_item = gtk.MenuItem("Tab Rename")
                 rename_item.show()
                 rename_item.connect("activate",self.tab_rename) 
-                m.append(rename_item)
+         	m.append(rename_item)
+		pref_item=gtk.MenuItem("Preferences")
+		pref_item.show()
+		pref_item.connect("activate",self.pref_tab)
+		m.append(pref_item)
                 quit_item = gtk.MenuItem("Quit")
                 quit_item.connect("activate", lambda discard: gtk.main_quit())  
                 quit_item.show()
@@ -42,11 +48,11 @@ class Utils():
                 m.popup(None, None, None, event.button, event.time, None)
 
     def copy(self, widget=None, data=None):
-        if self.terminal[self.index_].get_has_selection():
-            self.terminal[self.index_].copy_clipboard()
+        if self.vteObj.terminal[self.vteObj.index_].get_has_selection():
+            self.vteObj.terminal[self.vteObj.index_].copy_clipboard()
 
     def paste(self, widget=None, data=None):
-        self.terminal[self.index_].paste_clipboard()
+        self.vteObj.terminal[self.vteObj.index_].paste_clipboard()
 
     def close_tab(self,widget=None,data=None):
         # o anki sayfanin numarasinin alinmasi
@@ -60,7 +66,7 @@ class Utils():
         else:
             del self.hbox[pagenum]
             del self.label[pagenum]
-            del self.terminal[pagenum]
+            del self.vteObj.terminal[pagenum]
             self.notebook.remove_page(pagenum)
 
     def tab_rename(self,widget=None,data=None):
@@ -97,7 +103,7 @@ class Utils():
             return
         tab_name = ""
         self.name_list = []
-#tum isimleri kontrol icin bir listeye gonderir
+	#tum isimleri kontrol icin bir listeye gonderir
         for j in range(0,len(self.label)):
             self.name_list.append(self.label[j].get_text())
         for i in range(0,len(self.label)):
@@ -108,4 +114,39 @@ class Utils():
         self.label.append(gtk.Label("tab"+str(i+2)))
         return
 
+    def pref_tab(self,widget=None,data=None):
+    	o = ColorSelection_()
+	o.color_tab()
+
+class ColorSelection_:
+	def __init__(self):
+        	self.w = gtk.Window()
+		self.w.set_title("Tercihler")
+	        self.w.set_size_request(600, 400)
+        	self.notebook = gtk.Notebook()
+	        self.w.add(self.notebook)
+	def color_tab(self):
+		hbox1 = gtk.HBox(False, 0)
+		hbox2 = gtk.HBox(False,0)
+		hbox3 = gtk.HBox(False,0)
+	        label1 = gtk.Label("Yazi Rengi Secimi")
+		label2 = gtk.Label("Terminal Rengi Secimi")
+		label3 = gtk.Label("Yazi Buyuklugu")
+		c1 = gtk.ColorSelection()
+		c1.connect('color-changed', self.text_color)
+		c2 = gtk.ColorSelection()	
+		c2.connect('color-changed', self.term_color)
+        	hbox1.pack_start(label1)
+		hbox2.pack_start(label2)
+#		hbox.pack_start(label3)
+		self.notebook.insert_page(c1, hbox1)
+		self.notebook.insert_page(c2,hbox2)
+		hbox1.show_all()
+		hbox2.show_all()
+		self.w.show_all()
+	def text_color(*args):
+		color=c.get_current_color()
+		
+	def term_color(*args):
+		color=c.get_current_color()
 
