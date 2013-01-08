@@ -4,8 +4,9 @@ import os
 import gobject
 import time
 from utils import Utils
+from vteTerminal import VteTerminal
 
-class VteTerminal(Utils):
+"""class VteTerminal(Utils):
 	def constr(self):
 		self.terminal = []
 		self.index_ = -1
@@ -26,7 +27,7 @@ class VteTerminal(Utils):
 
 	def env_map_to_list(self, env): # terminal fork_command icin
 	        return ['%s=%s' % (k, v) for (k, v) in env.items()]
-
+"""
 class Console(Utils,VteTerminal):
     def __init__(self):
 	self.win = gtk.Window()

@@ -1,6 +1,7 @@
 import os
 import gtk
 import vte
+from vteTerminal import VteTerminal
 
 class Utils():
 
@@ -116,37 +117,45 @@ class Utils():
 
     def pref_tab(self,widget=None,data=None):
     	o = ColorSelection_()
-	o.color_tab()
+	o.color_tab(self.vteObj.terminal,self.vteObj.index_)
 
-class ColorSelection_:
+class ColorSelection_():
 	def __init__(self):
         	self.w = gtk.Window()
 		self.w.set_title("Tercihler")
 	        self.w.set_size_request(600, 400)
         	self.notebook = gtk.Notebook()
 	        self.w.add(self.notebook)
-	def color_tab(self):
+	def color_tab(self,terminal,index):
+		self.terminal = terminal
+		self.index = index
 		hbox1 = gtk.HBox(False, 0)
 		hbox2 = gtk.HBox(False,0)
 		hbox3 = gtk.HBox(False,0)
 	        label1 = gtk.Label("Yazi Rengi Secimi")
 		label2 = gtk.Label("Terminal Rengi Secimi")
 		label3 = gtk.Label("Yazi Buyuklugu")
-		c1 = gtk.ColorSelection()
-		c1.connect('color-changed', self.text_color)
-		c2 = gtk.ColorSelection()	
-		c2.connect('color-changed', self.term_color)
+		self.c1 = gtk.ColorSelection()
+		self.c1.connect('color-changed', self.text_color)
+		self.c2 = gtk.ColorSelection()	
+		self.c2.connect('color-changed', self.term_color)
         	hbox1.pack_start(label1)
 		hbox2.pack_start(label2)
-#		hbox.pack_start(label3)
-		self.notebook.insert_page(c1, hbox1)
-		self.notebook.insert_page(c2,hbox2)
+		#hbox.pack_start(label3)
+		self.notebook.insert_page(self.c1, hbox1)
+		self.notebook.insert_page(self.c2,hbox2)
 		hbox1.show_all()
 		hbox2.show_all()
 		self.w.show_all()
-	def text_color(*args):
-		color=c.get_current_color()
+	def text_color(self,*args):
+		color = self.c1.get_current_color()
+		fg = gtk.gdk.Color.to_string(color)
+ 		for i in range(0,len(self.terminal)):
+			self.terminal[i].set_color_foreground(gtk.gdk.Color(fg))
 		
-	def term_color(*args):
-		color=c.get_current_color()
-
+	def term_color(self,*args):
+		color=self.c2.get_current_color()
+		bg = gtk.gdk.Color.to_string(color)
+		for i in range(0,len(self.terminal)):
+			self.terminal[i].set_color_background(gtk.gdk.Color(bg))
+			
