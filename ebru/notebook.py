@@ -13,25 +13,22 @@ class Console(Utils,VteTerminal):
         self.win.connect('delete-event', lambda win, event: gtk.main_quit())
         self.base_setting()
 	keybinder.bind(self.window_open_key,self.callback,None)
-	print "F10 bas"
         self.shortcut()
 	self.win.add(self.notebook)  
         self.vteObj = VteTerminal()
 	self.vteObj.constr()
         # sag tiklama icin uc arg verildi
-#        self.create_tab(widget=None,data=None) 
+        self.create_tab(widget=None,data=None) 
 
     def callback(self,user_data):
-	print 	"F10 basildi"	
 	if not self.window_open:
-		print "pencere suan kapali pencereyi ac"
 		self.create_tab(widget=None,data=None)
 		self.window_open = True
 	else:
 		self.window_open = False
-		print "Pencere acik pencereyi kapat"
 		o = Shrink()
 		if self.direction == "left":
+			self.win.resize(400,400)
 			o.shrink_left(self.win)
 		elif self.direction == "right":
 			o.shrink_right(self.win)
@@ -93,7 +90,7 @@ class Console(Utils,VteTerminal):
 	if self.is_first == 0:
 		self.is_first =1
 		o = Expand()
-		self.direction = "left"
+		self.direction = "down"
 		if self.direction== "down":
 			self.win.set_size_request(500,50)
 			self.win.move((gtk.gdk.screen_width()-500)/2,0)
@@ -102,19 +99,21 @@ class Console(Utils,VteTerminal):
 			self.win.move(0,0)
 			o.expand_right(self.win)
 		elif self.direction == "left":
+			self.win.move(250,250)
 			self.win.move(gtk.gdk.screen_width(),0)
 			o.expand_left(self.win)
 	self.win.show_all()
     
     def full_screen(self,accelgroup,win,key,mod):
-        if self.is_fullscreen == False:
+	
+        if self.vteObj.is_fullscreen == False:
             self.win.fullscreen()
-            self.is_fullscreen = True
-        elif self.is_fullscreen == True:
+            self.vteObj.is_fullscreen = True
+        elif self.vteObj.is_fullscreen == True:
             self.win.unfullscreen()
-     	    self.win.resize(400,400)
-            self.is_fullscreen = False
-
+     	    self.win.set_size_request(200,500)
+            self.vteObj.is_fullscreen = False
+	
     def shortcut(self):
     	accelgroup = []
 	# full screen
@@ -129,11 +128,59 @@ class Console(Utils,VteTerminal):
         accelgroup.append(gtk.AccelGroup())
         key3, mod3= gtk.accelerator_parse("<Control><Shift>W") 
         accelgroup[2].connect_group(key3,mod3,gtk.ACCEL_MASK,self.close_tab_)
+	# change size arrow up
+	accelgroup.append(gtk.AccelGroup())
+	key4, mod4= gtk.accelerator_parse("<Alt><Shift>Up")
+	accelgroup[3].connect_group(key4,mod4,gtk.ACCEL_MASK,self.change_size_up)
+	# change size arrow down
+	accelgroup.append(gtk.AccelGroup())
+	key5, mod5= gtk.accelerator_parse("<Alt><Shift>Down")
+	accelgroup[4].connect_group(key5,mod5,gtk.ACCEL_MASK,self.change_size_down)
+	# change size arrow right
+	accelgroup.append(gtk.AccelGroup())
+        key6, mod6= gtk.accelerator_parse("<Alt><Shift>Right")
+	accelgroup[5].connect_group(key6,mod6,gtk.ACCEL_MASK,self.change_size_right)
+	# change size arrow left
+	accelgroup.append(gtk.AccelGroup())
+        key7, mod7= gtk.accelerator_parse("<Alt><Shift>Left")
+        accelgroup[6].connect_group(key7,mod7,gtk.ACCEL_MASK,self.change_size_left)
+	# ctrl d
+	accelgroup.append(gtk.AccelGroup())
+        key8, mod8= gtk.accelerator_parse("<Ctrl>D")
+        accelgroup[7].connect_group(key8,mod8,gtk.ACCEL_MASK,self.ctrld_tab)
         # add accel
         self.win.add_accel_group(accelgroup[0])
         self.win.add_accel_group(accelgroup[1])
         self.win.add_accel_group(accelgroup[2]) 
-    
+    	self.win.add_accel_group(accelgroup[3])
+	self.win.add_accel_group(accelgroup[4])
+	self.win.add_accel_group(accelgroup[5])
+	self.win.add_accel_group(accelgroup[6])
+	self.win.add_accel_group(accelgroup[7])
+
+    def change_size_up(self,accelgroup,win,key,mod):
+    	if self.direction == "down":
+		w,h = self.win.get_size()
+		if h > 50:
+			h = h-20
+			print h
+			self.win.set_default_size(w,h)
+			print self.win.get_size()
+			self.win.show_all()
+	elif self.direction == "right":
+		pass
+	elif self.direction == "left":
+		pass
+		
+    def change_size_down(self,accelgroup,win,key,mod):
+	print "down"
+
+    def change_size_left(self,accelgroup,win,key,mod):
+	print "left"
+
+    def change_size_right(self,accelgroup,win,key,mod):
+	print "right"
+ 
 class Expand():
 	def expand_down(self,win):
 		for i in range(50,500):
@@ -162,22 +209,14 @@ class Shrink():
 		pass
 	def shrink_right(self,win):
 		pass
-	def shrink_left(self,win):
-		print "kucult"
-		win.set_default_size(300,300)
-		win.show_all()
-		print win.get_size()
-		"""
+	def shrink_left(self,win):	
 		for i in range(500,50,-1):
-			print i
-			win.set_size_request(i,i)
-			
+			win.resize(i,500)
 			win.show_all()
-			print win.get_size()
 			while gtk.events_pending():
                                 gtk.main_iteration(block=False)
                         time.sleep(0.01)
-		"""
+		
 
 def main():
     app = Console()

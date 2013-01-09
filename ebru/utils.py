@@ -5,14 +5,16 @@ from vteTerminal import VteTerminal
 
 class Utils():
 
-    def start_term(self,accelgroup,win,key,mod):
-	print "**"
-	
     def create_tab_(self,accelgroup,win,key,mod):
         self.create_tab()
     
     def close_tab_(self,accelgroup,win,key,mod):
         self.close_tab()
+
+    def ctrld_tab(self,accelgroup,win,key,mod):
+	print os.environ['USER']
+	if os.environ['USER'] != 'root':
+		self.close_tab()
 
     def right_click(self,widget,event):
         if event.type == gtk.gdk.BUTTON_PRESS:

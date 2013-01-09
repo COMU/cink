@@ -15,8 +15,8 @@ class VteTerminal():
                 self.is_fullscreen = False
                 self.terminal.append(vte.Terminal())
                 # self.index_ sekme sayfasiyla ayni
-                self.terminal[self.index_].set_colors(gtk.gdk.color_parse('white'),gtk.gdk.color_parse('pink'),[])
-                #self.terminal.set_background_transparent(1)
+#                self.terminal[self.index_].set_colors(gtk.gdk.color_parse('white'),gtk.gdk.color_parse('pink'),[])
+		self.terminal[self.index_].set_opacity(0)
 
         def terminal_action(self):
                 self.terminal[self.index_].fork_command(self.argv[0], self.argv, self.env, self.cwd)
