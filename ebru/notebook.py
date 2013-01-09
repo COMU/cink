@@ -3,6 +3,7 @@ import vte
 import os
 import gobject
 import time
+import keybinder
 from utils import Utils
 from vteTerminal import VteTerminal
 
@@ -11,14 +12,35 @@ class Console(Utils,VteTerminal):
 	self.win = gtk.Window()
         self.win.connect('delete-event', lambda win, event: gtk.main_quit())
         self.base_setting()
+	keybinder.bind(self.window_open_key,self.callback,None)
+	print "F10 bas"
         self.shortcut()
 	self.win.add(self.notebook)  
         self.vteObj = VteTerminal()
 	self.vteObj.constr()
         # sag tiklama icin uc arg verildi
-        self.create_tab(widget=None,data=None) 
-   
+#        self.create_tab(widget=None,data=None) 
+
+    def callback(self,user_data):
+	print 	"F10 basildi"	
+	if not self.window_open:
+		print "pencere suan kapali pencereyi ac"
+		self.create_tab(widget=None,data=None)
+		self.window_open = True
+	else:
+		self.window_open = False
+		print "Pencere acik pencereyi kapat"
+		o = Shrink()
+		if self.direction == "left":
+			o.shrink_left(self.win)
+		elif self.direction == "right":
+			o.shrink_right(self.win)
+		elif self.direction == "down":
+			o.shrink_down(self.win)
+		
     def variable(self):
+	self.window_open_key = "F10"
+	self.window_open = False
         # bu degiskeni sadece ilk sayfa kapatildiginda baska sayfalarda varsa pencereyi tamamen kapatilmasin diye
         self.page_ = 0
 	self.is_first=0 #pencerenin ilk acilma bilgisi
@@ -71,15 +93,15 @@ class Console(Utils,VteTerminal):
 	if self.is_first == 0:
 		self.is_first =1
 		o = Expand()
-		direction = "left"
-		if direction== "down":
+		self.direction = "left"
+		if self.direction== "down":
 			self.win.set_size_request(500,50)
 			self.win.move((gtk.gdk.screen_width()-500)/2,0)
 			o.expand_down(self.win)
-		elif direction == "right":
+		elif self.direction == "right":
 			self.win.move(0,0)
 			o.expand_right(self.win)
-		elif direction == "left":
+		elif self.direction == "left":
 			self.win.move(gtk.gdk.screen_width(),0)
 			o.expand_left(self.win)
 	self.win.show_all()
@@ -107,19 +129,14 @@ class Console(Utils,VteTerminal):
         accelgroup.append(gtk.AccelGroup())
         key3, mod3= gtk.accelerator_parse("<Control><Shift>W") 
         accelgroup[2].connect_group(key3,mod3,gtk.ACCEL_MASK,self.close_tab_)
-	# create tab
-	accelgroup.append(gtk.AccelGroup())
-	key4, mod4 = gtk.accelerator_parse("F10")
-	accelgroup[3].connect_group(key4,mod4,gtk.ACCEL_MASK,self.start_term)
         # add accel
         self.win.add_accel_group(accelgroup[0])
         self.win.add_accel_group(accelgroup[1])
         self.win.add_accel_group(accelgroup[2]) 
-	self.win.add_accel_group(accelgroup[3])
     
 class Expand():
 	def expand_down(self,win):
-		for i in range(50,400):
+		for i in range(50,500):
 			win.set_size_request(500,i)
 			win.show_all()
 			while gtk.events_pending():
@@ -127,18 +144,40 @@ class Expand():
 	                time.sleep(0.01)
 	def expand_right(self,win):
 		for i in range(50,500):
-			win.set_size_request(i,400)
+			win.set_size_request(i,500)
 			win.show_all()
 			while gtk.events_pending():
                         	gtk.main_iteration(block=False)
                         time.sleep(0.01)
 	def expand_left(self,win):
 		for i in range(50,500):
-                        win.set_size_request(i,400)
+                        win.set_size_request(i,500)
                         win.show_all()
                         while gtk.events_pending():
                                 gtk.main_iteration(block=False)
                         time.sleep(0.01)		
+
+class Shrink():
+	def shrink_down(self,win):
+		pass
+	def shrink_right(self,win):
+		pass
+	def shrink_left(self,win):
+		print "kucult"
+		win.set_default_size(300,300)
+		win.show_all()
+		print win.get_size()
+		"""
+		for i in range(500,50,-1):
+			print i
+			win.set_size_request(i,i)
+			
+			win.show_all()
+			print win.get_size()
+			while gtk.events_pending():
+                                gtk.main_iteration(block=False)
+                        time.sleep(0.01)
+		"""
 
 def main():
     app = Console()
